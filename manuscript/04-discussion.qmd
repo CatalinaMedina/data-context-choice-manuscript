@@ -1,0 +1,93 @@
+---
+editor: visual
+bibliography: references.bib
+---
+
+## Discussion {#sec-discussion}
+
+### Recommendations for statistics and data science educators
+
+**Recommendation 1: Use real data with a real context**\
+\underline{Why?} A major theme we identified was students wanting to learn about the data context through the assignment, or expressing interests in the results of the analysis.
+This is not possible without real data from a real context, and artificial data from a real context may just perpetuate the perception of statistics being fake or made up.
+Our findings in support of the use of real data with a real context are in line with the empirical findings of @neumann2013 and the recommendations of many in the literature, including the @gaise2016.
+
+\underline{How?} We believe statistics and data science should be taught with real data generally, but we are not arguing against the use of simulated data when appropriate.
+Simulated data can be very helpful for exploring theoretical properties and ideas.
+We are arguing against the use of artificial data in place of real data, especially when the argument is just that using artificial data is easier for the instructor.
+To facilitate this we provide a list of resources we have found useful for finding data sets for educational purposes, available in the Supplementary Materials .
+
+**Recommendation 2: Use data contexts students care about**\
+\underline{Why?} @neumann2013 found a common theme of students finding the use of real data being engaging and motivating, and we additionally found empirical evidence of students being further engaged and motivated by real data with data contexts they were interested in.
+Improving students' experiences when learning statistics is a great motivator for instructors to strive to include interesting data set for students.
+
+Contrary to @young-saver2024, while we did not find a change in quantitative outcomes, we did have a lot of students saying they had a better experience with their homework when they were more interested or familiar with a topic.
+Even though there were also many students that did not feel choice of data context made any difference in their experience, we still think that being able to better engage some students is worth the effort.
+
+\underline{What?} We found several themes among students' data context preferences that can help us learn what students care about.
+Students preferred data that was relevant to them, their experiences, daily lives or lives as students, and their academic, career, and personal interests.
+
+Many students avoided the dog lifespan and teen pregnancy topics, perceiving them as negative or challenging.
+The dog lifespan context inherently involves death, so we don't feel this was a misunderstanding.
+However, we believe we inadequately introduced the teen pregnancy topic, resulting in an unintended perception.
+When working with sensitive or uncomfortable topics, it's important to be extra conscious of how we introduce the data context to students.
+
+\underline{How?} Students often associated familiarity with a topic with easier homework.
+Instructors should introduce data contexts before expecting students to engage with data.
+When introducing concepts students struggle with, use familiar and easily understood data contexts to reduce the burden of simultaneously understanding both the concept and the context.
+
+We believe that statistics can fuel a love of science, but scientific studies can be intimidating for both instructor and students to understand and they run the risk of being perceived as "just numbers".
+@evans2023 recommended using a study on human-dog interaction as a more accessible option for increasing engagement in undergraduate statistics courses.
+Other scientific studies can be made accessible by introducing them in ways connected to students.
+For example, we may want to use the study "Microbiome of Clothing Items Worn for a Single Day in a Non-Healthcare Setting" because it is relatively accessible with only basic statistics used [@whitehead2023] and can be made relevant to students by asking "Think about wearing your clothes all day and then sitting in your bed with them, what bacteria or fungus has accumulated?".
+@singer1990 proposed using local dissertations as a way to involve real data relevant to students.
+This could help demystify the intimidating topics of scientific research, graduate school, and dissertations while helping students see what their own institution is contributing to society.
+
+Another way to provide students data with contexts they care about is to ask them through a survey [@weiland2024], or even collect data on the students themselves to use in class [@schneiter2023].
+From this feedback a few datasets used in the class could be selected for substitution.
+
+We do not recommend relying solely on our own perceptions of what students will care about.
+Anecdotal evidence supporting this: both investigators predicted which data contexts would be most chosen and were wrong every week.
+Despite working with our student population for a while, we were severely incorrect about their preferences.
+Instead of choosing data based on our own opinions, we can be more successful by listening to what students say they care about.
+
+**Recommendation 3: Teach with a variety of data contexts**\
+\underline{Why?} No single data context appeals to all students, so limiting contexts reduces engagement opportunities.
+Preferences change over time and between classes—even some computer science majors found the cheating with AI dataset extremely boring.
+While we cannot make everyone happy, variety helps us reach more students throughout the course.
+Students working with different contexts were able to see how statistics is meaningful and applicable to real-world problems.
+We want students to see that the same statistical methods are useful across many different contexts, not just one.
+
+\underline{How?} Reflecting on data contexts used throughout your course can help assess variety.
+Getting data from diverse sources helps prevent contexts from being too similar.
+
+In addition to incorporating different contexts, providing rich datasets with multiple variables can help engage students.
+The 2003 movies dataset was most popularly chosen in the last week, with students commenting about movies they examined or relationships they investigated outside the assignment scope—they went out of their way to engage with the data.
+@gaise2016 recommends engaging students with multivariable thinking; we can achieve this objective and encourage students' curiosity by providing rich datasets they want to explore.
+
+**Recommendation 4: Consider choice as a pedagogical tool**\
+\underline{Why?} Even though we provided a variety of data sets, we still had students that were sometimes not intrigued by any of the options.
+By providing students with choices of data context, we can accommodate different interests at the same time, instead of only engaging each student a few times throughout the course.
+Additionally, students appreciate having autonomy, even for small tasks like choosing between similar homework assignments.
+It also provides students with more resources to practice the material beyond the required assignments.
+As discussed in the introduction, some instructors provide choice of data context through a final project.
+Alternatively, by providing some choices throughout the course we can hopefully engage more students before the end of the course.
+We are not arguing for students to always be given a choice though.
+Be conscious of when you want all students to interact with a certain data context, versus when you are ok with them having a choice.
+
+\underline{Why not?} We recognize that it may not be feasible for all instructors or for all assignments.
+Beyond the initial burden of finding and incorporating multiple real data sets with contexts we think students will care about, there is also the struggle of grading different assignments.
+The burden of finding data can be tackled across multiple iterations of a course, but the burden of grading assignments should be taken into consideration.
+
+### Limitations and future directions
+
+This study was for choice with homework assignments, so we do not know if these findings would necessarily be the same for projects.
+Also, we always provided 3 options, but purposely did not give them free choice.
+We do not know what is the ideal number of choices to provide students to balance variety for students with feasibility for instructor.
+
+Future investigations could build on this work by researching these questions on a larger scale and refining the questions we use to collect students opinions about their experience.
+Separating our questions to tease out more explicitly students' opinions on (1) having choice of data context; (2) context characteristics preference; (3) and their experience with their homework due to having a choice, could provide a clearer understanding of the benefits or challenges distinct to each component.
+
+Our sample was limited by being a major specific course taught by a single professor and the random assignment of treatment was done by section not at an individual level, so it was only a quasi-experiment.
+The low consent rate of the students and having a non-representative sample prevent us from generalizing our results broadly.
+This was only an initial investigative study and will require further investigation, but our identified themes provide empirically supported avenues for future targeted investigations.

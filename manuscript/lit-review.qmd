@@ -1,0 +1,91 @@
+---
+title: "Data Context Choice - Organized Lit Search"
+format: html
+editor: visual
+bibliography: references.bib
+---
+
+# Real data with context
+
+-   @gaisecollegereportasarevisioncommittee2016 third recommendation is to "integrate real data with a context and a purpose" [@carver2016], but only real reference for this is @neumann2013.
+
+-   @neumann2013 studied students perceptions on the use of real data in intro stats class
+
+-   @bibby2003 use of real data to make help students perceive statistics as real
+
+-   @brearley2018 real data with a context relevant to discipline (health sciences)
+
+-   @hall2011 resources on how to find and use real data in the classroom, teaching teachers.
+
+-   @lawnerweinberg2000 presents case studies on engaging students with real data through consulting projects
+
+-   @singer1990 list of published data sets and discussed desirable characteristics of real data sets
+
+-   @cobb1997 role of context: reasons that in statistics context gives meaning to numbers, which is distinctly different from in mathematics, and "In statistics, however, improvised examples don't work, because they don't provide authentic interplay between pattern and context."
+
+## Engage students with real data
+
+### Relevant to daily life or culture
+
+-   @neumann2013 recommends using real-data generally, supported by students perceptions, and specifically suggests using data relevant to their major or daily life.
+
+-   @sole2017 real-world readily understood data, students collect data abut coffee sales, to engage students
+
+-   @gould2010 offers ways to include real data that may be relevant to students from their daily interactions (e.g. music, social media, maps, exercise, personal data devices)
+
+-   @brooks2021 Geographic relevance aimed towards cultural relevance in large scale skill-based data science class (MOOCs).
+
+-   @gunderman2020 proposed using popular culture to engage learners in spatial data management skills, with examples applied to topics learners typically see as uninteresting to learn about in librarian sciences (no empirical study).
+    They also suggested that the use of popular culture may lead to reduced anxiety for the teacher when learning about and presenting a data context.
+
+### Relevant to field
+
+-   @smith2012 surveyed teachers to learn about their struggles teaching practitioner-oriented master’s degree program.
+    Recommends using data from current events and practitioners' sources
+
+-   @brearley2018 relevant to health sciences
+
+### Data on students or instructors
+
+-   @schneiter2023 sample among students to get data (leveraging large class sizes)
+
+-   @cobb1992 various recommendations including engaging students through hand on work like projects or class-generated data
+
+-   Psychology perspective about the importance of using real data, and pros and cons of using data collected on your students [@hulsizer2009].
+
+-   @ludlow2002 used their own faculty evaluations as longitudinal data in their course
+
+### Engaging students through data collection
+
+-   The findings of @bingham2010 support the use of real data for projects.
+    Assigned projects but students choose how to collect the data.
+    Students reported projects to be fun and relevant to their real lives
+
+-   @smith1998 semester-long sequence of projects involving data collection and analysis
+
+-   @cobb1992 various recommendations including engaging students through hand on work like projects or class-generated data
+
+-   @boger2001 found students that generated their own data reported a decrease in their appreciation of statistics.
+
+-   @hogg1991 commentary about students collecting their own data instead of using "old data"
+
+-   @hulsizer2009 book has a subsection about real data including references to works suggesting in class surveys to collect data on the class's students for use in teaching/practice.
+
+### Relevance through choice
+
+-   @khachatryan2023 having students investigate music data to allow students to investigate their favorite genres and artists
+-   @boger2001 students finding their own data reported a decrease in their appreciation of statistics.
+
+## Studying teachings trying to use real data
+
+-   @giambalvo2008 teaching stat teachers to teach using real data collected on Italian postal service
+
+-   @chick2012 struggles of teaching pre-service teachers to design lesson plans with real data.
+    Found it to be difficult for pre-service elementary school teachers in Australia, to utilize real data to teach statistical concepts.
+
+-   @smith2012 surveyed teachers to learn about their struggles teaching practitioner-oriented master’s degree program.
+    Recommends using data from current events and practitioners' sources
+
+# Autonomy through choice of final project (How students benefit or suffer from choices as learners)
+
+-   In marketing education there is work done on the student perceptions about number of choices available for project topic [@ackerman2014]. They found students who were interested in marketing thought having choices was important, but across all students they generally found too many choices to be perceived negatively.

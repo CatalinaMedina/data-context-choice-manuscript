@@ -1,0 +1,52 @@
+state,pregnancy_rate,percent_poverty,above_average_poverty
+Alabama,20.9,16.2,TRUE
+Alaska,16.9,11,FALSE
+Arizona,15.1,12.5,TRUE
+Arkansas,24.6,16.8,TRUE
+California,9.8,12.2,TRUE
+Colorado,11.1,9.4,FALSE
+Connecticut,6.4,9.8,FALSE
+Delaware,14.7,9.4,FALSE
+District of Columbia,12.5,13.3,TRUE
+Florida,13.1,12.7,TRUE
+Georgia,16.6,12.7,TRUE
+Hawaii,11.7,10.2,FALSE
+Idaho,10.9,10.7,FALSE
+Illinois,11.3,11.9,TRUE
+Indiana,16.7,12.6,TRUE
+Iowa,12.4,11,FALSE
+Kansas,16.2,12,TRUE
+Kentucky,21.8,16.5,TRUE
+Louisiana,23.7,18.6,TRUE
+Maine,8.4,10.8,FALSE
+Maryland,10.9,9.6,FALSE
+Massachusetts,5.8,10.4,FALSE
+Michigan,11.6,13.4,TRUE
+Minnesota,8.2,9.6,FALSE
+Mississippi,26.4,19.1,TRUE
+Missouri,16.9,13.2,TRUE
+Montana,12.2,12.1,TRUE
+Nebraska,14.1,11.2,FALSE
+Nevada,14,12.5,TRUE
+New Hampshire,4.6,7.2,FALSE
+New Jersey,8.2,9.7,FALSE
+New Mexico,19.7,17.6,TRUE
+New York,8.6,14.3,TRUE
+North Carolina,15,12.8,TRUE
+North Dakota,11.7,11.5,FALSE
+Ohio,15.4,13.4,TRUE
+Oklahoma,21.2,15.7,TRUE
+Oregon,10.1,12.1,TRUE
+Pennsylvania,10.6,11.8,TRUE
+Rhode Island,8.3,10.8,FALSE
+South Carolina,17.3,14,TRUE
+South Dakota,17.4,12.5,TRUE
+Tennessee,21,13.3,TRUE
+Texas,20.4,14,TRUE
+Utah,9,8.2,FALSE
+Vermont,5.8,10.4,FALSE
+Virginia,11.2,10.6,FALSE
+Washington,9.6,10,FALSE
+West Virginia,19.8,17.9,TRUE
+Wisconsin,9.8,10.7,FALSE
+Wyoming,16,11.8,TRUE

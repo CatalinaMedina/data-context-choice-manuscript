@@ -1,0 +1,211 @@
+---
+editor: source
+---
+
+## Results
+
+Analysis of surveys and homework revealed four overarching categories related to having choice of real data context: (1) students' sentiment about having choice, (2) student perceived qualitative outcomes, (3) quantitative outcomes, and (4) students' desired characteristics of real data context.
+
+### Students' sentiment about having choice
+
+```{r}
+choice_reviews_og <- read_csv(
+  here("data", "04-cleaned-data", "choice-reviews.csv"),
+  show_col_types = FALSE
+)
+
+overall_counts <- count(choice_reviews_og, overall)
+
+positive_theme_counts <- data.frame(positive_themes = unlist(str_split(
+  choice_reviews_og$positive_theme_resolved,
+  pattern = "; "
+))) |>
+  count(positive_themes) |>
+  arrange(n)
+```
+
+From the post-survey we judged `r overall_counts[overall_counts$overall == "negative", "n"]` students to have an overall negative opinion, `r overall_counts[overall_counts$overall == "impartial", "n"]` overall impartial opinions, and `r overall_counts[overall_counts$overall == "positive", "n"]` students to have an overall positive of having a choice of data context.
+
+The two students with an overall negative opinion thought having a choice "added unnecessary difficulty" or "made starting the assignment a little harder since I had to decide which topic to pick."
+This indicated that the students somewhat cared about which homework to pick, but unfortunately they thought the "options were still a bit limited."
+While only two students had overall negative opinions, there were two more comments about negative aspects of having choice. 
+A couple students expressed having their peers working on different assignments made "it more difficult to discuss the best way to solve certain problems" or "understand the concepts if they work on differing work." 
+Another student expressed the opposite opinion on the situation stating "I do like that having variety means that it's not as easy to copy answers from other students.”
+
+Most of the students that had overall impartial opinions expressed that having a choice of data context had no effect on them. 
+Some even specifically said it "didn't make my homework more or less enjoyable" or "they provide no significant benefit to my learning of the course topics."
+A few students expressed disinterest in the offered topics, with one saying "the topics would only matter to me if they were actually interesting to me, and if they're just three random topics that all equally are not that interesting to me then there's no point for me." 
+One student even said "the context of the analysis wasn't as useful as the actual data was", which is the opposite of the instructor's goal of working with real data with a real context on the homework. 
+A student that was overall impartial did acknowledge that while they were "ambivalent on the matter… I do think that it could benefit some students".
+
+Among all sentiments there were students that simply appreciated having autonomy, regardless of what that autonomy pertained to.
+"I really liked having the ability to choose. That small privilege somewhat made the homework more pleasing." 
+One student even expressed "I found it more interesting when I got to choose perhaps that's the illusion of choice."
+A couple of students pointed out that having multiple options for homework assignments provided opportunities for further studying and practice with the assignments they did not choose.
+
+Many of the students that expressed an overall positive sentiment described experiencing some qualitative outcome resulting from having choice of data context, which will be discussed in detail in the following section. 
+
+### Qualitative outcomes
+
+While we did not intend to investigate any associations with our intervention other than grade differences, thematic analysis revealed many themes of students identifying positive experiences. 
+The following is an exemplary response:
+
+> *I thought that having more options on what context to do problems with was pretty interesting overall, and helped motivate me to do the homework knowing that there was a tangible and significant reason for doing it. By that I mean that doing the homework to solve a problem I'm interested in seems more like something I would want to do on my off-time than something done for a grade, so I was more engaged in the assignment.*
+
+We classified students' responses as being associated with working with real data from a real context, working with real data from a context students are interested in, and working with real data from a context students are interested in and chose themselves, visualized in @fig-perceived-positive-outcomes. It is important to note that we had a low consent rate, so identified themes not necessarily representative of all of the students in the class, but we can still learn from the themes that consistently emerged.
+
+```{r}
+#| out-height: "3in"
+#| out-width: "6in"
+#| fig-cap: "Students' perceived positive outcomes."
+#| label: fig-perceived-positive-outcomes
+#| fig-alt: "Three encapsulating ovals. The outer oval is titled 'Real data from a real context' and lists 'value of statistics', 'recognize real-world application of statistics' and learn about context from data'. The next inner oval is titled 'Read data from context students are interested in' and lists 'Desire to learn more about data context' & 'better experience with homework'. The inner most oval is titled 'Real data from context students are interested in and chose themselves' and lists 'Sense of autonomy', and 'looking forward to choice on future assignments'."
+
+knitr::include_graphics("figures/perceived-outcomes.pdf")
+```
+
+As a student expressed, when working through an assignment using real data with context "statistics homework will let the student get more insight on the topic." 
+Even more it "showed that statistics is not just some hypothetical numeric calculation, but rather something that could actually have real-world impacts."
+Instead of instructors arguing why statistics is useful, students were reporting that they experienced it being useful.
+Furthermore, some students were even thinking beyond the homework questions discussing considerations of a study's design or concerns of bias due to sampling scheme.
+"It was cool to see survey results showing whether students admit to using AI. I just wish the sample sizes were bigger so we'd be more confident in the findings."
+Having a real context provides depth for students to apply all of their statistical knowledge, not just the content they learned that week.
+
+More benefits were identified when the data was not only real with context, but specifically from a context students were interested in "Rather than looking at the probabilities of flipping heads or rolling a die, I enjoyed learning through this example because it has a greater real-life impact."
+Students often expressed this led to the homework being more fun, engaging, and or motivating, with some saying they were able to work faster and or had an easier time focusing.
+A desire to learn more about the data context was expressed both in why they chose a context and in their discussion of the results they found in the homework.
+"I have a large dog at home who I love A LOT. I can never think about his lifespan and only wish for him to live forever. However, I chose this study in hopes of understanding more about the topic."
+At the end of homework assignments when we asked why they did or didn't choose certain contexts, several students used this as an opportunity to further describe or explore the results they found. 
+They reasoned whether or not the results made sense to them given their knowledge or experience, articulated surprise at unexpected patterns, posed possible explanations for findings, and one looked into unused variables in the data to explore more associations.
+
+The innermost ring of @fig-perceived-positive-outcomes highlights the positive outcomes associated with students being able to choose their context.
+Providing a choice of context was not only a mechanism to increase chances of students working with a context they are more interested in.
+Students said the autonomy itself "... allowed us to express some creativity and independence of choice" and another said "that small privilege somewhat made the homework more pleasing."
+One person said knowing they would have a choice made them look forward to their next assignment.
+
+
+### Quantitative outcomes
+
+```{r}
+set.seed(543)
+
+all_hw_grades <- read_csv(
+  here("data", "04-cleaned-data", "hw-grades.csv"),
+  show_col_types = FALSE,
+  col_types = cols(random_id = col_character())
+)
+
+model_prepped_data <- all_hw_grades |> 
+  filter(hw %in% 6:9) |> 
+  mutate(section_b = ifelse(section == "B", yes = 1, no = 0)) |> 
+  mutate(choice = ifelse(choice, yes = 1, no = 0)) |> 
+  mutate(week_2 = ifelse(hw == 7, yes = 1, no = 0)) |> 
+  mutate(week_3 = ifelse(hw == 8, yes = 1, no = 0)) |> 
+  mutate(week_4 = ifelse(hw == 9, yes = 1, no = 0)) |> 
+  mutate(random_id = factor(random_id)) |> 
+  select(random_id, hw_total_score_diff, choice, section_b, week_2, week_3, week_4, hw)
+
+main_gee_model <- geeglm(
+  hw_total_score_diff ~ choice + section_b + week_2 + week_3 + week_4,
+  family = gaussian,
+  corstr = "exchangeable",
+  id = random_id,
+  data = model_prepped_data
+)
+
+main_gee_model_summary <- summary(main_gee_model)
+```
+
+Using the model described in @eq-hw we did not find evidence of a difference between a student's homework score relative to their average homework scores pre-intervention (p-value = `r round(main_gee_model_summary$coefficients["choice", "Pr(>|W|)"], 4)`). 
+Further model results are available in the Table S1.
+While lack of effect of choice could possibly explain these results, we also note they could also be due to other factors such as low statistical power or a misspecified model. 
+We chose an exchangeable within student covariance structure to account for within student variation and the limitation of our small sample size. 
+A better option may be to account for expected difference in correlation between the two treatment homework assignments and between the two control homework assignments, if there was more statistical power. 
+Finally, a challenge of modeling homework grades is the ceiling effect. 
+Any theoretical improvement from an already near perfect scoring student would be near unobservable depending on how close the score is to the maximum.
+
+
+### Students' preferred real data context characteristics
+
+```{r}
+hw_setup <- read_csv(
+  here("data", "hw-setup.csv"),
+  show_col_types = FALSE
+)
+
+all_hw_grades <- read_csv(
+  here("data", "04-cleaned-data", "hw-grades.csv"),
+  show_col_types = FALSE,
+  col_types = cols(random_id = col_character())
+)
+
+total_contsented <- all_hw_grades |>
+  filter(!duplicated(random_id)) |>
+  group_by(section) |>
+  summarize(n = n())
+```
+
+```{r}
+#| label: fig-chosen-contexts
+#| fig-height: 4.5
+#| fig-pos: "!htb"
+#| fig-cap: Number of students that chose each data context by week, among students given choice of data context.
+
+hw_decisions <- all_hw_grades |>
+  filter(choice) |>
+  group_by(hw, context) |>
+  count()
+
+hw_choices <- hw_setup |>
+  filter(choice) |>
+  left_join(hw_decisions, by = c("hw", "context")) |>
+  mutate(n = ifelse(is.na(n), yes = 0, no = n))
+
+ggplot(hw_choices, aes(x = n, y = context)) +
+  geom_col(fill = "gray70") +
+  facet_wrap(
+    ~ hw,
+    nrow = 4,
+    scales = "free",
+    labeller = as_labeller(c(
+      `6` = "Intervention Week 1",
+      `7` = "Intervention Week 2",
+      `8` = "Intervention Week 3",
+      `9` = "Intervention Week 4"
+    ))
+  ) +
+  theme_minimal() +
+  geom_text(aes(label = n), nudge_x = -0.75) +
+  labs(
+    x = "Count",
+    y = "Data context chosen"
+  )
+```
+
+@fig-chosen-contexts displays the counts of how many students chose a given data context, among lecture A students for the first two intervention weeks and lecture B students for the last two.
+No student chose electric vehicles in intervention week 2 or teen pregnancies in week 3.
+Additionally, very few students chose dog lifespans in week 3.
+
+Themes of why students chose certain contexts and not others are summarized in @fig-desirable-data-context-characteristics.
+Two major takeaways are that students have conflicting opinions and they overwhelmingly prefer contexts that are relevant to them and have some previous knowledge of. 
+
+```{r}
+#| out-height: "3in"
+#| out-width: "6in"
+#| fig-cap: "Desirable data context characteristics expressed by students."
+#| label: fig-desirable-data-context-characteristics
+
+knitr::include_graphics("figures/desirable-data-context-characteristics.pdf")
+```
+
+To the first point, some students liked a topic because they felt it was important or commonly discussed, while others disliked it for those very reasons.
+Some students chose the AI topic the second week because they had chosen it for the first topic, but other students either didn't like the context in the first place or preferred learning about a variety of contexts.
+Some students found the 2003 movies data to be too old because it was from around or before they were born while others preferred the dataset because they liked movies more than they cared about them being old.
+
+People caring more about things that are relevant to them is not a new idea, but relevance can be very difficult to identify for an instructor.
+Students' responses help provide more specify ways they identified a context to be relevant such as their field of study, career path, interests, experience, daily life. 
+
+Some preferences were less obvious, such as liking a context because they did not know what the results were likely to be beforehand or not liking a context because they felt a lack of trust in the quality of the data inherently due to the topic. 
+This one arose primarily from the cheating with AI topic where students assumed there would be under reporting.
+Another less commonly discussed preferred characteristic was for richer data where they can look further into associations beyond what was explored in the homework.
+

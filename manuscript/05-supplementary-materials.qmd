@@ -1,0 +1,207 @@
+---
+title: "Engaging students with statistics through choice of real data context on homework"
+subtitle: "Supplemental Materials"
+format: 
+  pdf:
+    toc: true
+    number-sections: true
+date: last-modified
+execute: 
+  echo: false
+  message: false
+  warning: false
+header-includes: |
+  \setcounter{figure}{0} % Reset the figure counter to 0
+  \setcounter{table}{0} % Reset the figure counter to 0
+  \renewcommand{\thefigure}{S\arabic{figure}}
+  \renewcommand{\thetable}{S\arabic{table}}
+---
+
+\newpage
+
+```{r}
+library(tidyverse)
+library(here)
+library(geepack)
+library(knitr)
+library(kableExtra)
+library(tinytable)
+```
+
+## Additional results
+
+```{r}
+#| label: tbl-r1-results
+#| tbl-cap: Estimates from generalized estiamting equation fit for research question 1's investigation
+
+set.seed(543)
+
+all_hw_grades <- read_csv(
+  here("data", "04-cleaned-data", "hw-grades.csv"),
+  show_col_types = FALSE,
+  col_types = cols(random_id = col_character())
+)
+
+model_prepped_data <- all_hw_grades |> 
+  filter(hw %in% 6:9) |> 
+  mutate(section_b = ifelse(section == "B", yes = 1, no = 0)) |> 
+  mutate(choice = ifelse(choice, yes = 1, no = 0)) |> 
+  mutate(week_2 = ifelse(hw == 7, yes = 1, no = 0)) |> 
+  mutate(week_3 = ifelse(hw == 8, yes = 1, no = 0)) |> 
+  mutate(week_4 = ifelse(hw == 9, yes = 1, no = 0)) |> 
+  mutate(random_id = factor(random_id)) |> 
+  select(random_id, hw_total_score_diff, choice, section_b, week_2, week_3, week_4, hw)
+
+main_gee_model <- geeglm(
+  hw_total_score_diff ~ choice + section_b + week_2 + week_3 + week_4,
+  family = gaussian,
+  corstr = "exchangeable",
+  id = random_id,
+  data = model_prepped_data
+)
+
+main_gee_model_summary <- summary(main_gee_model)
+
+main_gee_model_summary$coefficients |> 
+  mutate(coefficient = rownames(main_gee_model_summary$coefficients)) |> 
+  mutate(coefficient = case_when(
+    coefficient == "(Intercept)" ~ "Intercept",
+    coefficient == "choice" ~ "I (Choice)",
+    coefficient == "section_b" ~ "I (Section B)",
+    coefficient == "week_2" ~ "I (Week 2)",
+    coefficient == "week_3" ~ "I (Week 3)",
+    coefficient == "week_4" ~ "I (Week 4)"
+  )) |> 
+  select(coefficient, Estimate, "Std.err", Wald, "Pr(>|W|)") |> 
+  kbl(
+    booktabs = TRUE, 
+    digits = 3, 
+    row.names = FALSE,
+    col.names = c("Coefficient", "Estiamte", "Standard Error", "Wald Statistic", "P-value"),
+    align = "l", 
+    valign = "t"
+  ) |> 
+  kable_styling(
+    position = "center",
+    latex_options = c("striped")
+  )
+```
+
+\newpage
+
+```{r}
+#| label: tbl-r2-themes
+#| tbl-cap: Themes identified in research question 2's invesitgation.
+
+choice_themes <- read_csv(
+  here("analysis", "choice-themes.csv"),
+  show_col_types = FALSE
+)
+
+choice_themes |> 
+  filter(!is.na(theme)) |> 
+  select(theme, subtheme, subtheme_description) |> 
+  mutate(subtheme_description = str_to_sentence(subtheme_description)) |> 
+  kbl(
+    booktabs = TRUE, 
+    row.names = FALSE,
+    col.names = c("Theme", "Subtheme", "Subtheme Description"),
+    align = "l", 
+    longtable = TRUE
+  ) |> 
+  kable_styling(
+    position = "center", 
+    latex_options = c("striped", "hold_position") 
+  ) |> 
+  column_spec(column = 1:2, width = "1in") |> 
+  column_spec(column = 3, width = "4in")
+```
+
+\newpage
+
+```{r}
+#| label: tbl-r3-themes
+#| tbl-cap: Themes identified in research question 3's invesitgation.
+
+context_themes <- read_csv(
+  here("analysis", "data-context-themes.csv"),
+  show_col_types = FALSE
+)
+
+context_themes |> 
+  filter(!is.na(theme)) |> 
+  select(theme, subtheme, subtheme_description) |> 
+  mutate(subtheme_description = str_to_sentence(subtheme_description)) |> 
+  kbl(
+    booktabs = TRUE, 
+    row.names = FALSE,
+    col.names = c("Theme", "Subtheme", "Subtheme Description"),
+    align = "l",
+    longtable = TRUE
+  ) |> 
+  kable_styling(
+    position = "center", 
+    latex_options = c("striped", "hold_position") 
+  ) |> 
+  column_spec(column = 1:2, width = "1in") |> 
+  column_spec(column = 3, width = "4in")
+```
+
+## Resources for finding real data sets for educational purposes {#sec-resources}
+
+Below is a list of resources that have been recommended to find data for educational purposes. A dynamic version of this list of resources is available at \href{https://catalinamedina.github.io/resources.html}.
+
+### Repositories From Professional Organizations for Teaching
+
+- [JEDI](https://causeweb.org/jedi/) JEDI-informed teaching of statistics
+- [SSDSE Dataset Repository](https://docs.google.com/spreadsheets/d/1tuCXok_y_zQpSDGssaypETf9lnB6nCh9XVoCiMaPCuc/edit?gid=591469695#gid=591469695)
+- [CAUSE Resource Library](https://www.causeweb.org/cause/resources/library?field_material_type_tid=104)
+- [Teaching of Statistics in the Health Sciences (TSHS) Resources Portal](https://www.causeweb.org/tshs/), a source for well-documented health-related datasets and teaching materials.
+- [WISE (Web Interface for Statistics Education)](http://wise.cgu.edu/helpful-links/data-sources/ ) has a collection of demonstrations and tutorials.
+
+### Published Research 
+
+- [Study Finds](https://studyfinds.org/) More accessible topics from a wide range of fields
+- Google News Health and Sciences Section
+- [ICPSR](https://www.icpsr.umich.edu/web/pages/ICPSR/index.html) International social research
+- [OSF open data repository](https://osf.io/) General platform for sharing research, data, materials
+- Journals such as [PLOS1](https://journals.plos.org/plosone/)
+
+
+### Other Repositories or Data Portals
+
+- [Rdatasets](https://vincentarelbundock.github.io/Rdatasets/) Rdatasets is a collection of 3451 datasets which were originally distributed alongside the statistical software environment R and some of its add-on packages. The goal is to make these data more broadly accessible for teaching and statistical software development.
+- [Nationmaster](http://www.nationmaster.com/) portal to international economic, demographic and social data.
+- [Awesome Public Data Sets](https://github.com/caesar0301/awesome-public-datasets) by Xiaming Chen and other contributors
+- [Data and Story Library (DASL)](http://dasl.datadesk.com/)
+-   [Awesome public datasets](https://github.com/awesomedata/awesome-public-datasets)
+- [General Social Survey](https://gss.norc.org/us/en/gss/get-the-data.html) American demographics, behaviors, and opinions (good for two categorical variables)
+- [Bikeshare data portal](https://www.bikeshare.com/data/)
+- [Data.gov](https://www.data.gov/)
+- [Data is Plural](https://docs.google.com/spreadsheets/d/1wZhPLMCHKJvwOkP4juclhjFgqIY8fQFMemwKL2c64vk/edit#gid=0)
+- [Edinburgh Open Data](https://edinburghopendata.info/)
+- [CORGIS: The Collection of Really Great, Interesting, Situated Datasets](https://corgis-edu.github.io/corgis/)
+- [Google Dataset Search](https://datasetsearch.research.google.com/)
+- [Harvard Dataverse](https://dataverse.harvard.edu/)
+- [NHS Scotland Open Data](https://www.opendata.nhs.scot/)
+- [IPUMS survey data from around the world](https://ipums.org/)
+- [Los Angeles Open Data](https://data.lacity.org/browse)
+- [NYC OpenData](https://opendata.cityofnewyork.us/)
+- [Open access to Scotland's official statistics](https://statistics.gov.scot/home)
+- [PRISM Data Archive Project](https://www.icpsr.umich.edu/icpsrweb/content/ICPSR/fenway.html)
+-  [UCI machine learning repository](https://archive.ics.uci.edu/) Machine learning
+- [UN data](http://data.un.org/)
+- [UK Government Data](https://data.gov.uk/)
+- [US Government Data](https://sctyner.github.io/static/presentations/Misc/GraphicsGroupISU/2018-11-16-us-govt-data.html)
+- [Youth Risk Behavior Surveillance System (YRBSS)](https://chronicdata.cdc.gov/Youth-Risk-Behaviors/DASH-Youth-Risk-Behavior-Surveillance-System-YRBSS/q6p7-56au)
+- [Rebecca Barter's List of Public Databases](https://rebeccabarter.com/blog/2023-03-28-data_sources)
+
+### Open Access Textbooks
+
+- Peter K. Dunn (2024). Scientific Research and Methodology: An introduction to quantitative research in science and health. <https://bookdown.org/pkaldunn/SRM-Textbook>
+- [Bayes Rules! An Introduction to Applied Bayesian Modeling](https://www.bayesrulesbook.com/)
+- [Open Intro Statistics](https://www.openintro.org/book/os/)
+
+### Other Ideas of Places to Look
+
+- [Singer 1990](https://www.tandfonline.com/doi/abs/10.1080/00031305.1990.10475726) suggests looking at published papers from local dissertations

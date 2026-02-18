@@ -1,0 +1,82 @@
+---
+title: "Untitled"
+format: html
+---
+
+## Cheating with AI
+
+A study was conducted by Lee et al. (2024) to investigate changes in cheating behavior among US high school students, including the use of AI. They surveyed high school students about their experience with cheating behaviors. One question they asked students is if they had cheated by using AI in the past month. When they sampled 250 public high school students in 2023 they had 38 students report they had cheated using AI in the past month.
+
+```{r}
+n_ai <- 250
+x_ai <- 38
+p_ai <- x_ai / n_ai
+```
+
+p-value
+```{r}
+pnorm(
+  p_ai,
+  mean = 0.5, 
+  sd = sqrt(0.5 * 0.5 / n_ai)
+) * 2
+```
+
+95% CI
+```{r}
+p_ai + c(-1, 1) * qnorm(1 - (1 - 0.95) / 2) * sqrt(p_ai * (1 - p_ai) / n_ai)
+```
+
+## Gluten-free pasta
+
+Breadfruit is a nutritious fruit which can be processed into a flour, providing an inexpensive gluten-free flour alternative in tropical areas where the fruit is grown. A study conducted by Nochera and Ragone (2019) investigated the creation and evaluation of a gluten-free breadfruit flour pasta. Untrained panelists did a sensory evaluation of the breadfruit flour pasta and wanted to investigate if a majority of people like the pasta. 71 of the 57 panelists indicated that they liked the pasta.
+
+```{r}
+n_gf <- 71
+x_gf <- 57
+p_gf <- x_gf / n_gf
+```
+
+p-value
+```{r}
+pnorm(
+  p_gf,
+  mean = 0.5, 
+  sd = sqrt(0.5 * 0.5 / n_gf),
+  lower.tail = FALSE
+) * 2
+```
+
+95% CI
+```{r}
+p_gf + c(-1, 1) * qnorm(1 - (1 - 0.95) / 2) * sqrt(p_gf * (1 - p_gf) / n_gf)
+```
+
+
+## Home-team advantage
+
+The Premier League is a professional association football (aka soccer, not American football) league in England and the highest level of the English football league system. The league is composed of 20 clubs/teams.
+
+We want to investigate if there is a home-field advantage in football. Our sample will be from the 2019/2020 English Premier League (EPL), where the home team won 91 of 158 games (we will ignore the ties).
+
+```{r}
+n_ht <- 158
+x_ht <- 91
+p_ht <- x_ht / n_ht
+```
+
+p-value
+```{r}
+pnorm(
+  p_ht,
+  mean = 0.5, 
+  sd = sqrt(0.5 * 0.5 / n_ht),
+  lower.tail = FALSE
+) * 2
+```
+
+95% CI
+```{r}
+p_ht + c(-1, 1) * qnorm(1 - (1 - 0.95) / 2) * sqrt(p_ht * (1 - p_ht) / n_ht)
+```
+

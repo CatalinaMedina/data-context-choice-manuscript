@@ -1,0 +1,149 @@
+---
+editor: source
+---
+
+## Methods {#sec-methods}
+
+### Study setting
+
+```{r}
+all_hw_grades <- read_csv(
+  here("data", "04-cleaned-data", "hw-grades.csv"),
+  show_col_types = FALSE,
+  col_types = cols(random_id = col_character())
+)
+
+num_lec_a <- all_hw_grades |> 
+  filter(!duplicated(random_id)) |> 
+  filter(section == "A") |> 
+  nrow()
+
+num_lec_b <- all_hw_grades |> 
+  filter(!duplicated(random_id)) |> 
+  filter(section == "B") |> 
+  nrow()
+```
+
+The quasi-experiment was implemented in two sections of an undergraduate class at a large public research university in winter of 2025.
+The class was an introduction to probability and statistics course mainly for computer science majors, totaling 180 active students across the two sections.
+The first half of the class was mainly an introduction to probability, while the last half of the ten-week course was mainly an introduction to statistics, the intervention period.
+The only prerequisite to the course was a single-variable calculus course.
+`r num_lec_a + num_lec_b` students provided consent for their data to be used for research purposes, `r num_lec_a` from section A and `r num_lec_b` from section B.
+The students were not provided any incentive to participate (e.g., extra credit or monetary compensation), and were informed that their professor would not know who consented to be part of the study until after final grades were submitted.
+
+For each week of the quasi-experiment each student in the treatment section was able to choose between three options of similar homework assignments, varying mainly by data context investigated in the homework.
+The students in the control section were not given options, and were instead randomly assigned one of the three context options that the treatment section received.
+It was randomly assigned which section of the class would receive the treatment, choice between assignments, for the first two weeks of the intervention period.
+For the last two weeks of the intervention period the treatment and control were swapped, so each section would ultimately experience two weeks of the intervention and two of the control, see @tbl-experimental-design.
+
+```{r}
+#| label: tbl-experimental-design 
+#| tbl-cap: Data context quasi-experimental design. 
+#| tbl-pos: "!htb"
+
+data.frame(
+  week = c(
+    1:4
+  ),
+  section_a_options = c(
+    "Cheating with AI\nGluten-free pasta\nHome-team advantage",
+    "Cheating with AI\nElectric vehicle adoption\nSleep deprivation",
+    "Typing speeds",
+    "2003 movies"
+  ),
+  section_b_options = c(
+    "Cheating with AI",
+    "Sleep deprivation",
+    "Dog lifespans\nTeen pregnancies\nTyping speeds",
+    "2003 movies\nBike shares\nGorillas"
+  )
+) |>
+  mutate_all(linebreak) |>  
+  kbl(
+    booktabs = TRUE,
+    align = "l",
+    linesep = "",
+    escape = FALSE,
+    col.names = c(
+      "Week",
+      "Section A",
+      "Section B"
+    ) 
+  ) |> 
+  kable_styling(
+    latex_options = "striped"#, 
+    #full_width = TRUE
+    #stripe_index = c(1:3, 7:9)
+  ) |> 
+  column_spec(column = 1, width = "2cm") |> 
+  column_spec(column = 2, width = "5cm") |> 
+  column_spec(column = 3, width = "5cm") |> 
+  add_header_above(c(" " = 1, "Data context choices" = 2))
+```
+
+Each homework assignment was centered around one real data set, with context provided to motivate the research questions investigated.
+All surveys and assignments were integrated as part of the curriculum and are available in the Supplemental Materials.
+
+We intentionally chose the data contexts each week to at minimum be contexts we thought could interest students and covered a variety of disciplines each week.
+There were some additional context characteristics we wanted to investigate including: serious vs lighthearted (i.e., teen pregnancy vs typing speed), older (i.e., 2003 movies), scientific studies unrelated to humans (i.e., gorillas), and recycled contexts (i.e., cheating with AI).
+
+### Homework centered around real data with context
+
+Each homework assignment was centered around the investigation of a real data set with context.
+The homework assignments were computer-based where the student would either see one homework or three homework options for that week, with the statistical topic and data context included in the title when choice was provided.
+For example, intervention week one a student with choice of data context would see: "hw6-single-prop-cheating-with-AI", "hw6-single-prop-gluten-free-pasta", and "hw6-single-prop-home-team-advantage".
+
+The data context was included in the title so students would immediately be aware of the data context, even without opening the assignment.
+The assignments where students were given a choice began with "Note: There are three options for homework \[number\], that differ by data topic, and you only need to complete one of the three assignments".
+Within the assignment there would be a brief introduction to the data context with either the data file, or a link to the study it came from.
+For example, the sleep deprivation homework option of intervention week 2 began:
+
+"Sleep deficiency can affect your physical, cognitive, and social functions. Sleep deprivation has been linked to many chronic health problems including obesity and depression. The CDC conducted a study in 2008 [link embedded] to investigate sleep deprivation among United States residents..."
+
+The homework would involve an investigation of the real data within context, with questions consistent across homework options for that week that only varied by data context.
+For example, for two intervention homework 2 options, question 2 began either:
+
+> "We want to calculate a 90% CI for the difference in proportion of residents that experienced sleep deprivation for the past 30 days between California and Washington..."
+
+> "We want to calculate a 90% CI for the difference in proportion of public high school students that used a digital device as an unauthorized aid between 2019 and 2023...".
+
+The real data investigation would sometimes be supplemented by hypothetical questions within the context, but with artificial numbers to have students explore theoretical properties, such as what happens to the standard deviation when sample size increases.
+
+### Data collection and analysis
+
+**Research question 1: do students achieve higher grades relative to students not given choice?** First, we wanted to detect if there were differences in weekly homework grades associated with being given a choice of data context?
+We had access to all of the students homework grades, including those before the intervention period.
+Specifically, we chose to look for differences in a students homework grade relative to their average pre-intervention period homework grade, associated with having a choice of data context.
+We chose to investigate this with a generalized estimating equation where the response for student $i$ at time $t$ was regressed on whether they had a choice of data context for the homework, the student's section, and separate indicators for intervention week.
+An exchangeable correlation structure was used for each student to control for intra-student correlation across time points.
+$$
+\begin{split}
+&\text{Intervention Homework Grade}_{it} - \text{Average Pre-intervention Homework Grade}_{i}\\
+&= \beta_0 + \beta_1 {I_{(\text{Choice})}}_{it} + \beta_2 {I_{(\text{Section B})}}_{i} + \beta_3 {I_{(\text{Week 2})}}_{t} + \beta_4 {I_{(\text{Week 3})}}_t + \beta_5 {I_{(\text{Week 4})}}_t + \epsilon_{it}
+\end{split}
+$$ {#eq-hw}
+
+**Research question 2: how do students perceive having a choice of data context?** 
+We surveyed students after the intervention period to answer research question 2.
+We asked "What did you think about having three homework assignment options to choose from that differed by data context for two homework assignments in this class?", since each section only had choice of data context for two weekly homework assignments.
+From students responses to this question, we qualitatively identified themes and judged if the students opinion seemed to be overall negative, impartial, or positive.
+
+
+**Research question 3: what characteristics of the data contexts led students to choose one assignment over the other options?** The second goal of this work was to investigate why students chose a data context over the other options, and what they did or did not like about a given data context.
+At the end of each homework assignment the students had a question related to the data context, which varied depending on whether the student had a choice of data context for that assignment.
+Consider intervention homework 1 and the cheating with AI topic, which was the randomly assigned topic for section B.
+
+The students not given a choice of data context (section B) were asked:
+
+-   "Please explain in detail what you liked and/or what you did not like about this data topic"
+
+Students given a choice of data context (section A) were asked:
+
+-   "Please explain in detail what led you to choose this topic, cheating with AI, to investigate" and
+-   "What was it about the other two options (gluten-free pasta and home-team advantage) that led you not to choose them? Please explain in detail"
+
+These questions also specified that there were no correct answers and these questions were only being graded for completeness.
+Thematic analysis was used to identify reoccurring themes among the students' responses to these questions, both researchers independently identified a theme, or multiple themes, for each student's response to the data context question(s) [@braun2006].
+The themes were recorded as either being specific to a context, or nonspecific to the context (e.g., the student just chose the first homework option on the screen).
+The researchers then resolved any conflicts together.
+Due to technical error we did not have this data from the no choice section (section A) in intervention week 3.

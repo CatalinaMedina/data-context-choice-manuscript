@@ -1,0 +1,277 @@
+---
+title: "Week 9 homework calculations"
+format: html
+---
+
+```{r}
+#| message: false
+
+library(tidyverse)
+```
+
+
+# Gorillas
+
+[Chest beats as an honest signla of body sized in male mountain gorillas](https://www.nature.com/articles/s41598-021-86261-8)
+
+Acoustic signals of animals have been found to be key for facilitating assessment of rivals and in the choice of mates. Chest beating, where the animal stands on two legs and pounds on their chest to make a drumming sound, is a common characteristic of gorillas, especially male gorillas. This drumming can even be heard over half a mile away. We are interested in studying if we can use a gorillas size to learn about its chest beating behaviors, since they are related to dominance.
+
+Specifically, we have data on chest beating rate (per 10 hours), `chest_beat_rate`, and maximum distance across the shoulders (cm), `back_breadth`.
+
+We want to `chest_beat_rate` regressed on `back_breadth `
+
+```{r}
+gorilla_data <- read_csv(
+  "hw9/gorillas.csv",
+  show_col_types = FALSE
+) |> 
+  janitor::clean_names()
+
+ggplot(gorilla_data, aes(x = back_breadth, y = chest_beat_rate)) +
+  geom_point() +
+  theme_bw() 
+
+ggsave(
+  "figures/gorilla-data-plot.png",
+  height = 2.5,
+  width = 3
+)
+```
+
+First, install the R packages if you haven't.
+`install.packages(c("broom", "modelr"))`
+Then run the following R code to load the data set:
+`library(tidyverse)`
+`gorilla_data <- read_csv("http://catalinamedina.github.io/bayesrules-hw-data/gorillas.csv")`
+
+Fit a linear model to regress `chest_beat_rate` on `back_breadth `, saving your model as `gorilla_model`. Use `broom::tidy(gorilla_model)` to summarize your model. 
+
+```{r}
+gorilla_model <- lm(chest_beat_rate ~ back_breadth , data = gorilla_data)
+(gorilla_model_summary <- broom::tidy(gorilla_model))
+```
+
+```{r}
+round(gorilla_model_summary$estimate[1], 2)
+
+round(gorilla_model_summary$estimate[2], 2)
+
+round(confint(gorilla_model)["back_breadth", ], 2)
+
+gorilla_urs <- c(58, 1.8)
+
+(pred <- round(
+  gorilla_model_summary$estimate[1] + gorilla_model_summary$estimate[2] * gorilla_urs[1],
+  2
+))
+
+round(gorilla_urs[2] - pred, 2)
+
+broom::glance(gorilla_model)
+
+round(modelr::rmse(gorilla_model, data = gorilla_data), 2)
+```
+
+
+```{r}
+gorilla_data <- gorilla_data |> 
+  modelr::add_residuals(gorilla_model)
+
+ggplot(gorilla_data, aes(x = resid)) +
+  geom_density()
+```
+
+
+```{r}
+ggplot(gorilla_data, aes(x = back_breadth, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
+```{r}
+ggplot(gorilla_data, aes(x = back_breadth, y = chest_beat_rate, color = age20, shape = age20)) +
+  geom_point() +
+  theme_bw()
+```
+
+```{r}
+gorilla_model2 <- lm(chest_beat_rate ~ back_breadth + age20, data = gorilla_data)
+broom::tidy(gorilla_model2)
+
+broom::glance(gorilla_model2)
+```
+
+
+# Bike share data
+
+We have data on bike ridership among registered members of the Capital Bikeshare service in Washington, D.C. rentals by weather
+
+```{r}
+bike_data <- bayesrules::bikes
+```
+
+```{r}
+ggplot(bike_data, aes(x = temp_actual, y = rides)) +
+  geom_point() +
+  theme_bw() 
+
+ggsave(
+  "figures/bikeshare-data-plot.png",
+  height = 2.5,
+  width = 3
+)
+```
+
+First, install the R packages if you haven't.
+`install.packages(c("broom", "modelr", "bayesrules"))`
+Then run the following R code to load the data set:
+`library(tidyverse)`
+`bike_data <- bayesrules::bikes`
+
+Fit a linear model to regress `rides` on `temp_actual`, saving your model as `bike_model`. Use `broom::tidy(bike_model)` to summarize your model. 
+
+```{r}
+bike_model <- lm(rides ~ temp_actual, data = bike_data)
+(bike_model_summary <- broom::tidy(bike_model))
+```
+
+```{r}
+round(bike_model_summary$estimate[1], 2)
+
+round(bike_model_summary$estimate[2], 2)
+
+round(confint(bike_model)["temp_actual", ], 2)
+
+bike_day <- c(53, 1699)
+
+(pred <- round(
+  bike_model_summary$estimate[1] + bike_model_summary$estimate[2] * bike_day[1],
+  2
+))
+
+round(bike_day[2] - pred, 2)
+
+broom::glance(bike_model)
+
+round(modelr::rmse(bike_model, data = bike_data), 2)
+```
+
+
+```{r}
+bike_data <- bike_data |> 
+  modelr::add_residuals(bike_model)
+
+ggplot(bike_data, aes(x = resid)) +
+  geom_density()
+```
+
+
+```{r}
+ggplot(bike_data, aes(x = temp_actual, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
+```{r}
+ggplot(bike_data, aes(x = rides, y = temp_actual, color = weekend, shape = weekend)) +
+  geom_point() +
+  theme_bw()
+```
+
+```{r}
+bike_model2 <- lm(rides ~ temp_actual + weekend, data = bike_data)
+broom::tidy(bike_model2)
+
+broom::glance(bike_model2)
+```
+
+
+
+# 2003Movies
+
+Do critics opinions match public opinion when it comes to movies?
+We have data for [movies released in 2003](https://www.rossmanchance.com/iscam2/files.html).
+We want to see if the amount that a movie earns in theaters `box_office` is related to critics' opinions of the movie `score`.
+
+```{r}
+movies_data <- openintro::movies
+
+ggplot(movies_data, aes(y = box_office, x = score)) + 
+  geom_point() +
+  theme_bw()
+
+ggsave(
+  "figures/2003movie-data-plot.png",
+  height = 2.5,
+  width = 3
+)
+```
+
+First, install the R packages if you haven't.
+`install.packages(c("broom", "modelr", "openintro"))`
+Then run the following R code to load the data set:
+`library(tidyverse)`
+`movies_data <- openintro::movies`
+
+
+
+```{r}
+movie_model <- lm(box_office ~ score, data = movies_data)
+(movie_model_summary <- broom::tidy(movie_model))
+```
+
+```{r}
+round(movie_model_summary$estimate[1], 2)
+
+round(movie_model_summary$estimate[2], 2)
+
+round(confint(movie_model)["score", ], 2)
+
+brother_bear <- c(60.6, 84.874)
+
+(pred <- round(
+  movie_model_summary$estimate[1] + movie_model_summary$estimate[2] * brother_bear[1],
+  2
+))
+
+round(brother_bear[2] - pred, 2)
+
+broom::glance(movie_model)
+
+round(modelr::rmse(movie_model, data = movies_data), 2)
+```
+
+```{r}
+movies_data <- movies_data |> 
+  modelr::add_residuals(movie_model)
+
+ggplot(movies_data, aes(x = resid)) +
+  geom_density()
+```
+
+```{r}
+ggplot(movies_data, aes(x = score, y = resid)) +
+  geom_point() +
+  geom_hline(yintercept = 0)
+```
+
+```{r}
+ggplot(movies_data, aes(x = score, y = box_office, color = rating, shape = rating)) +
+  geom_point() +
+  theme_bw()
+
+ggsave(
+  "figures/2003movie-data-rating-plot.png",
+  height = 2.5,
+  width = 3
+)
+```
+
+```{r}
+movie_model2 <- lm(box_office ~ score + rating, data = movies_data)
+(movie_model_summary <- broom::tidy(movie_model2))
+
+broom::glance(movie_model2)
+```
+
+

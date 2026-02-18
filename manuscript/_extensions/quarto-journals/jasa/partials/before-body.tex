@@ -1,0 +1,52 @@
+
+
+\def\spacingset#1{\renewcommand{\baselinestretch}%
+{#1}\small\normalsize} \spacingset{1}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$if(date)$
+\date{$date$}
+$endif$
+$if(journal.blinded)$
+\spacingset{.8}
+\bigskip
+\bigskip
+\bigskip
+\begin{center}
+  {\LARGE\bf $title$}
+\end{center}
+\smallskip
+\bigskip
+\spacingset{1}
+$else$
+\title{\bf $title$}
+\author{
+$for(by-author)$
+$it.name.literal$$if(it.acknowledgements)$\thanks{$it.acknowledgements$}$endif$\\
+$for(it.affiliations)$
+$if(it.department)$\parbox[t]{0.9\textwidth}{\centering $it.department$}$endif$\\
+$if(it.name)$\parbox[t]{0.9\textwidth}{\centering $it.name$}$endif$\\[0.5em]
+$endfor$
+$sep$and\\[0.5em]
+$endfor$
+}
+\maketitle
+$endif$
+
+\bigskip
+\bigskip
+\begin{abstract}
+$abstract$
+\end{abstract}
+
+$if(keywords)$
+\noindent%
+{\it Keywords:} $for(keywords)$$it$$sep$, $endfor$
+\vfill
+$endif$
+
+\newpage
+\spacingset{1.9} % DON'T change the spacing!
+

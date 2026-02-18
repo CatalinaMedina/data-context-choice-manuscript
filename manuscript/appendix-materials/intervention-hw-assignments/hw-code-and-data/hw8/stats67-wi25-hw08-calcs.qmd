@@ -1,0 +1,388 @@
+---
+title: "Homework 8"
+format: html
+---
+
+```{r}
+#| message: false
+
+library(tidyverse)
+```
+
+# Dog Lifespan
+
+Dog breeds can vary dramatically in characteristics such as size and lifespan. da Silva and Cross ([2023](https://doi.org/10.5061/dryad.wwpzgmsn6)) recorded the median adult lifespan (in years) and adult body weight (in pounds) of 73 different dog breeds. We will use this data to investigate differences in mean lifespan based on weight.
+
+```{r}
+#| eval: false
+
+dogs_og <- read_csv(
+  "data-original/DogsLife.csv", 
+  show_col_types = FALSE
+)
+
+dogs <- dogs_og |> 
+  janitor::clean_names() |> 
+  rename(weight_kg = weight) |> 
+  mutate(weight_lb = weight_kg * 2.205) |> 
+  mutate(breed_size = case_when(
+    weight_lb <= 50 ~ "Small",
+    weight_lb > 50 ~ "Large"
+  )) |> 
+  mutate(breed_size = factor(
+    breed_size,
+    levels = c("Small", "Large")
+  ))
+
+write_csv(
+  dogs, 
+  file = "data/dog-lifespan.csv"
+)
+```
+
+We will consider a large dog to be a dog over 50 pounds, and a small dog to be a dog under 50 pounds.
+
+```{r}
+dogs <- read_csv(
+  "data/dog-lifespan.csv",
+  show_col_types = FALSE
+)
+
+dog_stats <- dogs |>  
+  group_by(breed_size) |> 
+  summarize(x_bar = mean(lifespan), sd = sd(lifespan), n = n()) |> 
+  mutate(
+    x_bar = round(x_bar, 4),
+    sd = round(sd, 4)
+  )
+
+data.frame(dog_stats)
+
+n_large <- filter(dog_stats, breed_size == "Large") |>  pull(n)
+n_small <- filter(dog_stats, breed_size == "Small") |>  pull(n)
+x_bar_large <- filter(dog_stats, breed_size == "Large") |>  pull(x_bar)
+x_bar_small <- filter(dog_stats, breed_size == "Small") |>  pull(x_bar)
+sd_large <- filter(dog_stats, breed_size == "Large") |>  pull(sd)
+sd_small <- filter(dog_stats, breed_size == "Small") |>  pull(sd)
+```
+
+Hypothesis test for difference between two means
+```{r}
+# point estimate
+round(x_bar_small - x_bar_large, 4)
+
+# standard error
+dog_se <- sqrt(sd_small^2 / n_small + sd_large^2 / n_large)
+round(dog_se, 4)
+
+# degrees of freedom
+dog_df <- min(n_small, n_large) - 1
+dog_df
+
+# p-value
+test_stat <- (x_bar_small - x_bar_large) / dog_se
+
+signif(pt(test_stat, df = dog_df, lower.tail = FALSE), 4)
+signif(pt(test_stat, df = dog_df, lower.tail = FALSE) * 2, 4)
+```
+
+Confidence interval for difference between two means
+```{r}
+# critical value
+crit_val <- qt(1 - 0.05 / 2, df = dog_df)
+round(crit_val, 4)
+
+# 95% CI
+round(x_bar_small - x_bar_large + c(-1, 1) * crit_val * dog_se, 4)
+```
+
+Simple linear regression
+
+```{r}
+dog_model <- lm(lifespan ~ weight_lb, data = dogs)
+broom::tidy(dog_model)
+```
+
+```{r}
+confint(dog_model)
+```
+
+
+```{r}
+ggplot(dogs, aes(x = weight_lb, y = lifespan)) +
+  geom_point() +
+  theme_bw() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Weight (pounds)", y = "Lifespan (years)")
+
+ggsave(
+  "figures/dogs-linear-plot.png", 
+  width = 3,
+  height = 2.5
+)
+```
+
+
+
+# Typing speed
+
+Beginning with the introduction of the typewriter in the 1800’s, an individual’s ability to type quickly and accurately became a marketable skill. People used to take typesetting classes and research and training were conducted to improve how people learn the skill of typing. Today, proficient typing ability is commonly assumed to be a necessity, but differences in education and availability of personal devices has resulted in differences in typing ability for students across the world. 
+
+Pinet et al. ([2022](https://doi.org/10.1186/s41235-022-00424-3)) conducted a study to investigate characteristics related to the modern students’ typing proficiency at a large public university in France. This data set includes typing speed (words per minute) and typing accuracy (computed as the difference between the total number of characters in the target sentence and the number of  insertions, deletions, substitutions, divided by the total number of characters in the target sentence).
+
+We will use this data to investigate differences in a person's typing speed based on their typing accuracy. 
+
+```{r}
+#| eval: false
+
+typing_og <- read_csv(
+  "data-original/Typing.csv",
+  show_col_types = FALSE
+)
+
+typing <- typing_og |> 
+  janitor::clean_names() |> 
+  rename(speed = m_ts, accuracy = m_acc) |> 
+  filter(!is.na(speed) & !is.na(accuracy)) |> 
+  mutate(accuracy_class = case_when(
+    accuracy > 0.85 ~ "High",
+    accuracy <= 0.85 ~ "Low"
+  )) |> 
+  mutate(accuracy_class = factor(accuracy_class, levels = c("Low", "High")))
+
+write_csv(
+  typing,
+  "data/typing-speed.csv"
+)
+```
+
+We will consider a person to have high typing accuracy if they have an accuracy above 85%, and low typing accuracy if they have an accuracy below 85%.
+
+```{r}
+typing <- read_csv(
+  "data/typing-speed.csv",
+  show_col_types = FALSE
+)
+
+typing_stats <- typing |> 
+  group_by(accuracy_class) |> 
+  summarize(x_bar = mean(speed), sd = sd(speed), n = n()) |> 
+  mutate(
+    x_bar = round(x_bar, 4),
+    sd = round(sd, 4)
+  )
+
+data.frame(typing_stats)
+
+n_large <- filter(typing_stats, accuracy_class == "High") |> pull(n)
+n_small <- filter(typing_stats, accuracy_class == "Low") |>  pull(n)
+x_bar_large <- filter(typing_stats, accuracy_class == "High") |>  pull(x_bar)
+x_bar_small <- filter(typing_stats, accuracy_class == "Low") |>  pull(x_bar)
+sd_large <- filter(typing_stats, accuracy_class == "High") |>  pull(sd)
+sd_small <- filter(typing_stats, accuracy_class == "Low") |>  pull(sd)
+```
+
+Hypothesis test for difference between two means
+```{r}
+# point estimate
+round(x_bar_small - x_bar_large, 4)
+
+# standard error
+type_se <- sqrt(sd_small^2 / n_small + sd_large^2 / n_large)
+round(type_se, 4)
+
+# degrees of freedom
+type_df <- min(n_small, n_large) - 1
+type_df
+
+# p-value
+test_stat <- (x_bar_small - x_bar_large) / type_se
+
+signif(pt(test_stat, df = type_df, lower.tail = FALSE), 4)
+signif(pt(test_stat, df = type_df, lower.tail = FALSE) * 2, 4)
+```
+
+Confidence interval for difference between two means
+```{r}
+# critical value
+crit_val <- qt(1 - 0.05 / 2, df = type_df)
+round(crit_val, 4)
+
+# 95% CI
+round(x_bar_small - x_bar_large + c(-1, 1) * crit_val * type_se, 4)
+```
+
+Simple linear regression
+
+```{r}
+typing_model <- lm(speed ~ accuracy, data = typing)
+broom::tidy(typing_model)
+```
+
+```{r}
+confint(typing_model)
+```
+
+
+```{r}
+ggplot(typing, aes(x = accuracy, y = speed)) +
+  geom_point() +
+  theme_bw() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Typing Accuracy", y = "Typing Speed (words/minute)")
+
+ggsave(
+  "figures/typing-linear-plot.png", 
+  width = 3,
+  height = 2.5
+)
+```
+
+
+
+# Teenage pregnancy
+
+There have been a lot of different factors proposed to be related to teenage pregnancy, such as sex education, family history, etc. High school dropout is more common among teenage mothers, so researchers are interested in identifying factors related to teenage pregnancy to identify potential interventions, such as increasing access to contraception, as well as where those interventions should be targeted.
+
+One researcher was interested in investigating if teen pregnancy rates are related to the percent poverty for US states, because increased poverty may be related to decreased access to contraceptives or funding for sex education.
+The researcher pulled data from the CDC on [`teen pregnancy rates`](https://www.cdc.gov/nchs/pressroom/sosmap/teen-births/teenbirths.htm) (number of births per 1,000 females aged 15–19) and on `percent poverty` (percent of people in poverty in the past 12 months) by US state in 2022 reported in the [American Community Survey](https://www.census.gov/programs-surveys/acs/data.html). 
+
+
+```{r}
+#| eval: false
+
+# Source: U.S. Census Bureau 2022 American Community Survey, 1-year estimates
+us_poverty_og <- read_csv(
+  unzip(
+    "data-original/ACSDP1Y2022.DP03_2025-02-19T225027.zip", 
+    files = "ACSDP1Y2022.DP03-Data.csv"
+  ),
+  show_col_types = FALSE
+) 
+
+file.remove("ACSDP1Y2022.DP03-Data.csv"))
+
+us_poverty <- us_poverty_og |> 
+  slice(-1) |> 
+  select(
+    percent_poverty = DP03_0128PE,
+    state = NAME
+  )
+
+# Teen pregnancy data
+us_teen_pregnancy_og <- read_csv(
+  "data-original/data-table.csv",
+  show_col_types = FALSE
+)
+
+us_teen_pregnancy <- us_teen_pregnancy_og |> 
+  janitor::clean_names() |> 
+  filter(year == 2022) |> 
+  select(state_abr = state, pregnancy_rate = rate) |> 
+  left_join(
+    data.frame(
+      state_abr = c(state.abb, "District of Columbia"),
+      state = c(state.name, "District of Columbia")
+    ),
+    by = "state_abr"
+  ) |> 
+  select(state, pregnancy_rate)
+
+
+# Joining poverty and pregnancy data frames
+teen_pregnancy <- us_teen_pregnancy |> 
+  left_join(us_poverty, by = "state") |> 
+  mutate(percent_poverty = as.numeric(percent_poverty)) |> 
+  mutate(above_average_poverty = case_when(
+    percent_poverty > 11.5 ~ TRUE,
+    percent_poverty <= 11.5 ~ FALSE
+  ))
+
+write_csv(
+  teen_pregnancy,
+  "data/teen-pregnancy.csv"
+)
+```
+
+In 2022 the [US official poverty rate](https://www.census.gov/library/publications/2023/demo/p60-280.html) was 11.5%, so we will defined a state to have above average poverty if they have a percent poverty above 11.5%, and we will similarly define states to have below average poverty if they have a percent poverty of or below 11.5%.
+
+```{r}
+pregnancy <- read_csv(
+  "data/teen-pregnancy.csv",
+  show_col_types = FALSE
+) 
+
+pregnancy_stats <- pregnancy |> 
+  group_by(above_average_poverty) |> 
+  summarize(x_bar = mean(pregnancy_rate), sd = sd(pregnancy_rate), n = n()) |> 
+  mutate(
+    x_bar = round(x_bar, 4),
+    sd = round(sd, 4)
+  )
+
+data.frame(pregnancy_stats)
+
+n_large <- filter(pregnancy_stats, above_average_poverty) |> pull(n)
+n_small <- filter(pregnancy_stats, !above_average_poverty) |>  pull(n)
+x_bar_large <- filter(pregnancy_stats, above_average_poverty) |>  pull(x_bar)
+x_bar_small <- filter(pregnancy_stats, !above_average_poverty) |>  pull(x_bar)
+sd_large <- filter(pregnancy_stats, above_average_poverty) |>  pull(sd)
+sd_small <- filter(pregnancy_stats, !above_average_poverty) |>  pull(sd)
+```
+
+Hypothesis test for difference between two means
+```{r}
+# point estimate
+point_estimate <- x_bar_large - x_bar_small
+round(point_estimate, 4)
+
+# standard error
+pregnancy_se <- sqrt(sd_large^2 / n_large + sd_small^2 / n_small)
+round(pregnancy_se, 4)
+
+# degrees of freedom
+prengancy_df <- min(n_small, n_large) - 1
+prengancy_df
+
+# p-value
+test_stat <- point_estimate / pregnancy_se
+
+signif(pt(test_stat, df = prengancy_df, lower.tail = FALSE), 4)
+signif(pt(test_stat, df = prengancy_df, lower.tail = FALSE) * 2, 4)
+```
+
+Confidence interval for difference between two means
+```{r}
+# critical value
+crit_val <- qt(1 - 0.05 / 2, df = prengancy_df)
+round(crit_val, 4)
+
+# 95% CI
+round(point_estimate + c(-1, 1) * crit_val * pregnancy_se, 4)
+```
+
+Simple linear regression
+
+```{r}
+pregnancy_model <- lm(pregnancy_rate ~ percent_poverty, data = pregnancy)
+broom::tidy(pregnancy_model)
+```
+
+```{r}
+confint(pregnancy_model)
+```
+
+
+```{r}
+ggplot(pregnancy, aes(x = percent_poverty, y = pregnancy_rate)) +
+  geom_point() +
+  theme_bw() +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "Percent Poverty", y = "Teen Pregnancy Rate\n(per 1,000 females aged 15–19)")
+
+ggsave(
+  "figures/pregnancy-linear-plot.png", 
+  width = 3,
+  height = 2.5
+)
+```

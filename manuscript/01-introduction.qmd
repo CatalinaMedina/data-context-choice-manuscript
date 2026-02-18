@@ -1,0 +1,94 @@
+---
+editor: visual
+---
+
+## Introduction {#sec-introduction}
+
+Among the statistics education community, there are recommendations to use real data when teaching statistics.
+As Guidelines for Assessment and Instruction in Statistics Education (GAISE) College Report [-@gaise2016] states in recommendation 3, instructors should "integrate real data with a context and a purpose".
+Using real data with context helps students perceive statistics as real and relevant (Neumann et al. 2013, Bibby 2003, Brearley et al. 2018, Cobb & Moore 1997, Cobb 1992) and engage with the discipline (Hall 2011).
+Numerous recommendations exist on how to teach with real data and where to find it (Hall 2011, Singer & Willett 1990).
+We believe statistics should be taught as an investigative tool to learn from data about the world.
+
+We present @tbl-data-types to clarify what we mean by real data with a context.
+*Made up data* is artificially created and easiest for instructors to generate but provides no real information.
+*Empirically informed data*, data simulated from real statistics or parameter estimates, mimics real phenomena but cannot provide reliable real-world implications.
+*Real data* is generated from real-world events or observations.
+Often we tailor real data to demonstrate specific concepts by dropping data points, but this can remove meaning since data no longer reflects what actually occurred.
+We distinguish tailoring from cleaning, where cleaning converts data to readily usable form.
+Real raw data provides exposure to data encountered in real practice but may require substantial wrangling.
+Regardless of data type, without context there is no information to be gained from statistical analysis.
+This work focuses on real cleaned data with context.
+
+```{r}
+#| label: tbl-data-types
+#| tbl-cap: "Data context types with some pros and cons identified."
+
+data.frame(
+  data_source = c(
+    "Simulated (made up)", 
+    "Simulated (empirically informed)", 
+    "Real (tailored)",
+    "Real (cleaned)",
+    "Real (raw)"
+  ),
+  easily_obtainable = c("$\\checkmark$", "$\\checkmark$", "", "", ""),
+  readily_usable = c("$\\checkmark$", "$\\checkmark$", "$\\checkmark$", "$\\checkmark$", ""),
+  realistic_practice = c("", "", "", "", "$\\checkmark$"),
+  with_data_context = c("", "", "", "$\\checkmark$", "$\\checkmark$"),
+  withotu_data_context = c("", "", "", "", "")
+) |> 
+  kbl(
+    col.names = c(
+      "Data Type",
+      "Easily Obtained",
+      "Readily Usable",
+      "Realistic Practice",
+      "With Context",
+      "Without Context"
+    ), 
+    align = "c",
+    escape = FALSE,
+    booktabs = TRUE
+  ) |> 
+  kable_styling(latex_options = c("striped")) |> 
+  column_spec(1, width = "1.6 in") |> 
+  column_spec(2:6, width = "0.7 in") |> 
+  add_header_above(c(" " = 4, "Real-world implications" = 2))
+```
+
+When an instructor decides they want to use real data, the natural question is what real data contexts should they use?
+Many are of the opinion that the data we should engage students by using data relevant to their everyday lives.
+Even once an instructor decides they want to use real data with a context relevant to their students' daily life, there is the challenge of deciding what is relevant to their students.
+@sole2017 used data about coffee sales and @gould2010 recommends using data about music, social media, maps, exercise, and data from personal devices.
+@gunderman2020 proposed using popular culture to engage learners in spatial data management skills, with examples applied to topics learners typically see as uninteresting.
+@ludlow2002 proposed using data from the instructor's own faculty evaluations to engage students.
+@brooks2021 tried to achieve relevance in their massive open online course by using weather data from the student's region of residence, but their findings led them to suggest using data relevant to the students' career identities instead.
+In addition to recommending data relevant to students' daily life, @neumann2013 also recommended using data relevant to a student's major.
+@brearley2018 discuss using research articles relevant to students' fields.
+Using data relevant to students' career goals may help bridge the gap between what teachers perceive as relevant to a student's life and what the student perceives as relevant.
+This recommendation would be helpful in classes where students are from the same or similar majors, but less helpful in class with students from a diverse set of majors.
+
+Despite the efforts of teachers to find data with compelling context, not every student will engage with every data context.
+Therefore there are recommendations to use a diverse set of real data contexts [@gaise2016], with effort made to engage students with some subsets of the data contexts investigated in the course.
+Alternatively, some suggest engaging students with real data by using data collected on the students.
+@schneiter2023 suggests that large class sizes may be especially posed to benefit from data collection on students by demonstrating concepts like sampling distributions in addition to engaging students.
+@hulsizer2009 investigated the importance and psychological pros and cons of using data collected on your students.
+
+Another pathway is allowing students to choose data contexts, either in assignments [@boger2001] or projects [@cetinkaya-rundel2022].
+@boger2001 compared effects by having one section investigate instructor-provided data while another had free choice across four assignments.
+Interestingly, students given autonomy reported significantly decreased perceived usefulness of statistics in their field.
+@boger2001 posed this decrease could be due to increased effort required for students to choose and collect their own data.
+
+While there have been many recommendations of data contexts to use there is little empirical evidence for certain contexts over others.
+Even among the common recommendation of using data relevant to students, there is little systematic study of what data students find as relevant to themselves.
+One thing our study sought to answer is: what do our students perceive as relevant to themselves, and why?
+Investigating this question can provide ideas and support for what could be relevant to your students.
+More broadly, we hoped to investigate preference and impact of student-chosen data context to better understand what data contexts we should be selecting as an instructor, why it may or may not be worth the effort, and if we should give students some autonomy in selection of context.
+
+We hypothesized that students having the autonomy to choose the data context that they would like to work on from multiple data contexts provided to them, may lead students to be more engaged with the material.
+We investigated this through a quasi-experiment.
+In one section of a course we allowed students to choose their weekly homework assignment from three similar instructor-provided options that varied by the data context, while the other course section did not receive a choice.
+This investigation of choice of data context was implemented at a large public institution in two sections of an undergraduate introductory probability and statistics course taught by a single instructor.
+As statistics and data science instructors we wanted to learn if we should provide students choice of data context and what data contexts should we be choosing for students?
+In this work we investigated if given the choice between similar homework assignments that differ by data context (1) do students achieve higher grades relative to students not given choice, (2) how do students perceive having a choice of data context, (3) what characteristics of the data contexts led students to choose one option over the others?
