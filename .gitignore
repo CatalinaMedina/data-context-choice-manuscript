@@ -1,0 +1,12 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+*.html
+*.Rproj
+*.DS_Store
+
+\01-raw-deidentified-student-data
+\02-independent-reviews
+\03-joint-reviews
+\04-cleaned-data
