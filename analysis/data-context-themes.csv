@@ -1,0 +1,46 @@
+subtheme,theme,subtheme_description,classification,theme_label_desirable_data_context_characteristics,subtheme_label_desirable_data_context_characteristics
+no info,,not enough information to classify a theme,no info,,
+popular,current topic,topic commonly discussed/popular,data context,Current,Popular
+old,current topic (converse),student felt data was too old,data context,Current,Not too old
+important,important,student felt the topic was important,data context,Important,
+ethics,important,student expressed appriciation for data context being related to ethics,data context,Important,Ethics
+political,comfort,commonly discussed political/controversial topic,data context,Comfortable,non political
+negative,comfort,student perceives topic to have a negative connotation,data context,Comfortable,Nonnegative connotation
+comfort,comfort,student felt uncomfortable about the topic,data context,Comfortable,
+generalizability,relevant,felt topic was relevant to large population of people,data context,Relevant,Widely to many
+relatable,relevant,student expressed data context to be relatable with no reason,data context,Relevant,
+major,relevant,relevant to student's field of study or academic interests,data context,Relevant,Student's field of study
+career,relevant,relevant to student's future career plans,data context,Relevant,Student's  career path
+interest,relevant,relevant to personal interests,data context,Relevant,Student's interests
+dislike,relevant,relevant to student's dislike,data context,Relevant,Student's interests
+experience,relevant,personal experience with topic,data context,Relevant,Student's experience
+student,relevant,relevant to daily life of a student,data context,Relevant,Student's daily life as a student
+life,relevant,relevance to daily life,data context,Relevant,Student's daily life
+familiar,previous knowledge,familiar with / knowledgable about topic,data context,Previous knowledge,Familiarity
+sequel,previous knowledge,same topic student chose the previous week,data context,Previous knowledge,Repeat exploration of a context
+predictable,previous knowledge,student felt topic/results would be predictable,data context,Intriguing,Less predictable
+preconception,previous knowledge,student has a preconception about the results from the data exploration,hw,?,?
+unclear,previous knowledge,student felt unclear about what the context was,data context,Previous knowledge,
+intriguing,learn more,the topic was intriguing to a student,data context,Intriguing,
+curious,learn more,curious to learn more about topic through homework,hw,Learn more,Curiousity
+results,learn more,expressed interest in what they learned about the results,hw,Learn more,Interest in results
+surprise,learn more,student expressed they were surprised by results,hw,Learn more,Surprise
+difficulty,better experience,perceived topic as easy to understand,hw; data context,Previous knowledge,Easily comprehendible
+pace,better experience,student thought homework would take less time with the topic,hw,Better experience,Faster
+fun,better experience,thought it would be fun to do hw on topic,hw,Better experience,Fun
+engaging,better experience,thought topic would make homework more engaging,hw,Better experience,Engaging
+motivating,better experience,thought topic would make the homework more motivating,hw,Better experience,Motivating
+different,variety,different from topics commonly discussed in class,data context,Varied,Different from other contexts explored
+multivariable,variety,student expressed appriciation for the data being multivariable,data context,Varied,Multivariable
+random,random,random choice,no info,,
+first,random,first option student saw for hw,no info,,
+data quality,data quality,distrust of quality of data due to topic,data context,Comfortable,Trustworthy
+technical difficulty,,student had technical difficulty with assignment,hw,,
+impartial,,student felt indifferent about the topic,data context,,
+overall positive,,student's opinion of assigned data context was overall positive,data context; hw,,
+overall negative,,student's opinion of assigned data context was overall negative,data context; hw,,
+overall impartial,,student's opinion of assigned data context was overall neither negative nor positive,data context; hw,,
+overall no info,,"not enough information to classify student's opinion of assigned data context as overall positive, neagative, or impartial",data context; hw,,
+,,,,,
+self-reporting bias,data quality,student mentioned distrust of data due to concerns of self-reporting bias,data context,Trustworthiness,
+sample size,data quality,student mentioned distrust of results due to concerns of sample size,data context,Trustworthiness,
