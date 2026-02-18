@@ -1,0 +1,312 @@
+---
+title: "Data wrangling"
+format: html
+editor: source
+---
+
+```{r}
+#| message: false
+library(here)
+library(tidyverse)
+```
+
+```{r}
+hw_setup <- read_csv(
+  here("data", "hw-setup.csv"),
+  show_col_types = FALSE
+)
+```
+
+## For quantitiative analysis of homework grades
+
+```{r}
+# To fix hw 1 section b late penalty
+lecb_hw1_q1_11_fix <- data.frame(
+  unfixed_total_score = c(6.87, 7.225),
+  penalty = c(.5, .5),
+  fixed_question_1_11_score = c(2.49, 1.49)
+)
+```
+
+
+We want students' total grades and sections for each homework assignment as one csv.
+
+Each assignment has some questions dropped from the total score, the reason for each is noted in hw-setup.csv.
+
+```{r}
+all_hw_grades <- NULL
+
+for(i in 1:nrow(hw_setup)) {
+  hw_i_og <- read_csv(
+    here(
+      "data", "deidentified-student-data", "deidentified-files", 
+      hw_setup$file_name[i]
+    ),
+    show_col_types = FALSE
+  )
+  
+  if (!is.na(hw_setup$questions_to_drop[i])) {
+    hw_i <- hw_i_og |> 
+      select(!contains(str_split_1(
+        hw_setup$questions_to_drop[i], 
+        pattern = ", "
+      )))
+    
+  } else if (hw_setup$hw[i] == 1 & hw_setup$section[i] == "B") { 
+    # Fix the two late penalties
+    hw_i <- hw_i_og |> 
+      mutate(question_1_11_score = case_when(
+        total_score == lecb_hw1_q1_11_fix[1, "unfixed_total_score"] ~ lecb_hw1_q1_11_fix[1, "fixed_question_1_11_score"],
+        total_score == lecb_hw1_q1_11_fix[2, "unfixed_total_score"] ~ lecb_hw1_q1_11_fix[2, "fixed_question_1_11_score"],
+        TRUE ~ question_1_11_score
+      )) |> 
+      mutate(total_score = case_when(
+        total_score == lecb_hw1_q1_11_fix[1, "unfixed_total_score"] ~ total_score / lecb_hw1_q1_11_fix[1, "penalty"],
+        total_score == lecb_hw1_q1_11_fix[2, "unfixed_total_score"] ~ total_score / lecb_hw1_q1_11_fix[2, "penalty"],
+        TRUE ~ total_score
+      ))
+  }
+  
+  # Need to sum across the score columns to compute hw grade
+  score_cols <- colnames(hw_i)[
+    str_detect(colnames(hw_i), pattern = "score") & 
+    str_detect(colnames(hw_i), pattern = "total", negate = TRUE)
+  ]
+  
+  hw_i$total_score_adj <- rowSums(hw_i[, score_cols], na.rm = TRUE)
+  
+  # Need to sum across the weight columns to compute max points possible
+  max_points_cols <- colnames(hw_i)[
+    str_detect(colnames(hw_i), pattern = "weight")
+  ]
+  
+  hw_i$max_points_adj <- rowSums(hw_i[max_points_cols], na.rm = TRUE)
+  
+  hw_i_cleaned <- hw_i |> 
+    filter(status != "Missing") |> 
+    select(
+      random_id, 
+      total_score, 
+      total_score_adj, 
+      max_points, 
+      max_points_adj, 
+      status
+    ) |>
+    mutate(section = hw_setup$section[i]) |> 
+    mutate(hw = hw_setup$hw[i]) |> 
+    mutate(context = hw_setup$context[i]) |> 
+    mutate(choice = hw_setup$choice[i])
+    
+  
+  all_hw_grades <- all_hw_grades |> 
+    bind_rows(hw_i_cleaned)
+}
+
+all_hw_grades <- all_hw_grades |> 
+  rename(total_score_pts_adj = total_score_adj) |> 
+  mutate(total_score_per = 100 * total_score_pts_adj / max_points_adj) |> 
+  arrange(section, random_id, hw)
+
+# Add average homework grade prior to intervention (Homeworks 1-4)
+all_hw_grades <- all_hw_grades |> 
+  filter(hw %in% c(1:4)) |> 
+  group_by(random_id) |> 
+  summarize(ave_hw_per_pre_intervention = mean(total_score_per, na.rm = TRUE)) |> 
+  full_join(all_hw_grades, by = "random_id") |> 
+  mutate(hw_total_score_diff = total_score_per - ave_hw_per_pre_intervention)
+```
+
+### Clean individual issues
+
+#### Two assignments for one student
+One student has two assignments for week 9.
+The 2003 movies submission is the fully attempted submission, while the bike shares submission was barely attempted, so we drop that one.
+```{r}
+duplicated_id <- all_hw_grades |> 
+  filter(hw == 9, context %in% c("Bike shares", "2003 movies")) |> 
+  filter(duplicated(random_id)) |> 
+  pull(random_id)
+
+all_hw_grades <- all_hw_grades %>%
+  filter(!(random_id == duplicated_id & hw == 9 & context == "Bike shares"))
+```
+
+### Save cleaned data
+```{r}
+all_hw_grades |> 
+  arrange(section, random_id, hw) |> 
+  write_csv(here("data", "cleaned-data", "hw-grades.csv"))
+```
+
+## For qualitiave analysis about data context
+
+We want one csv for students with choice of their responses about why they chose the data context they chose
+
+```{r}
+all_context_reasons <- NULL
+intervention_hws <- which(hw_setup$hw %in% 6:9)
+hws_not_read_in <- NULL
+
+for(i in intervention_hws) {
+  context_reason_i_og <- read_csv(
+    here(
+      "data", "deidentified-student-data", "deidentified-files", 
+      hw_setup$file_name[i]
+    ),
+    show_col_types = FALSE
+  )
+  
+  no_data_context_qs <- is.na(hw_setup$data_context_questions[i])
+  hw_unchosen <- sum(context_reason_i_og$status == "Graded") == 0
+  
+  if (no_data_context_qs | hw_unchosen) {
+    hws_not_read_in <- c(hws_not_read_in, hw_setup$file_name[i])
+    
+  } else {
+    context_reason_i <- context_reason_i_og |> 
+      rename(data_context_question = paste0(
+        hw_setup$data_context_questions[i], "_response"
+      )) |> 
+      filter(status != "Missing") |> 
+      select(random_id, data_context_question) |> 
+      mutate(section = hw_setup$section[i]) |> 
+      mutate(hw = hw_setup$hw[i]) |> 
+      mutate(context = hw_setup$context[i]) |> 
+      mutate(choice = hw_setup$choice[i])
+    
+    if (hw_setup$choice[i]) {
+    context_reason_i <- context_reason_i |> 
+      mutate(q_end_removed = str_split_i(
+        data_context_question, 
+        pattern =  '\\"\\}', 
+        1
+      )) |> 
+      mutate(q_start_removed = str_split_i(
+        q_end_removed, 
+        pattern =  "\\{\"0\"=>\\\"", 
+        2
+      )) |> 
+      mutate(context_q1_response = str_split_i(
+        q_start_removed, 
+        pattern =  "\", \\\"1\\\"=>\\\"", 
+        1
+      )) |> 
+      mutate(context_q2_response = str_split_i(
+        q_start_removed, 
+        pattern =  "\", \\\"1\\\"=>\\\"", 
+        2
+      )) |> 
+      mutate(context_q3_response = "not applicable") |> 
+      select(!c(q_end_removed, q_start_removed))
+    
+    } else {
+      context_reason_i <- context_reason_i |> 
+        mutate(context_q1_response = "not applicable") |> 
+        mutate(context_q2_response = "not applicable") |> 
+        mutate(context_q3_response = data_context_question)
+    }
+  
+    all_context_reasons <- all_context_reasons |> 
+      bind_rows(context_reason_i)
+  
+  }
+  
+}
+
+all_context_reasons <- all_context_reasons |> 
+  mutate(assignment_id = str_c(hw, section, random_id)) |> 
+  select(
+    assignment_id, 
+    random_id, 
+    hw, 
+    section, 
+    choice, 
+    context,
+    context_q1_response, 
+    context_q2_response, 
+    context_q3_response
+  ) |> 
+  mutate(ds_context1_theme = NA) |> 
+  mutate(ds_context1_theme_reason = NA) |> 
+  mutate(ds_context2_theme = NA) |> 
+  mutate(ds_context2_theme_reason = NA) |> 
+  mutate(ds_context3_theme = NA) |> 
+  mutate(ds_context3_theme_reason = NA) |> 
+  mutate(nonspecific_theme = NA) |> 
+  mutate(nonspecific_theme_reason = NA) |> 
+  mutate(nontheme_notes = NA)
+```
+
+One student has two assignments for week 9.
+The 2003 movies submission is the fully attempted submission, while the bike shares submission was barely attempted, so we drop that one.
+```{r}
+duplicated_id <- all_context_reasons |> 
+  filter(hw == 9, context %in% c("Bike shares", "2003 movies")) |> 
+  filter(duplicated(random_id)) |> 
+  pull(random_id)
+
+all_context_reasons <- all_context_reasons %>%
+  filter(!(random_id == duplicated_id & hw == 9 & context == "Bike shares"))
+```
+
+### Save cleaned data
+```{r}
+all_context_reasons |> 
+  arrange(section, hw, context) |> 
+  write_csv(here("data", "cleaned-data", "hw-context-reasons-themes-Catalina.csv"))
+
+all_context_reasons |> 
+  arrange(section, hw, context) |> 
+  write_csv(here("data", "cleaned-data", "hw-context-reasons-themes-Mine.csv"))
+```
+
+We want another csv for students without choice of their responses about what the liked and didn't like about data context
+
+## For qualitative analysis of pre and post-study surveys
+
+We want one csv for responses to post-study survey
+
+```{r}
+post_survey_lec_a <- read_csv(
+  here("data", "01-raw-deidentified-student-data", "leca-post-survey-deidentified.csv"),
+  show_col_type = FALSE
+) |> 
+  mutate(section = "A")
+
+post_survey_lec_b <- read_csv(
+  here("data", "01-raw-deidentified-student-data", "lecb-post-survey-deidentified.csv"),
+  show_col_type = FALSE
+) |> 
+  mutate(section = "B")
+
+post_survey <- post_survey_lec_a |> 
+  bind_rows(post_survey_lec_b) |> 
+  filter(status == "Graded") 
+
+choice_opinions <- post_survey |> 
+  select(section, random_id, student_response = question_10_response) |> 
+  mutate(
+    negative_theme = NA,
+    negative_theme_reason = NA,
+    impartial_theme = NA,
+    impartial_theme_reason = NA,
+    positive_theme = NA,
+    positive_theme_reason = NA,
+    nonspecific_theme = NA,
+    nonspecific_theme_reason = NA
+  )
+```
+
+Save a file for each reviewer
+```{r}
+write_csv(
+  choice_opinions, 
+  here("data", "02-independent-reviews", "survey-choice-themes-Cat.csv")
+)
+
+write_csv(
+  choice_opinions, 
+  here("data", "02-independent-reviews", "survey-choice-themes-Mine.csv")
+)
+```
+

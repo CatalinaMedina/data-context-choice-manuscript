@@ -1,0 +1,105 @@
+---
+title: "Retrieving Data for Those Who Consented"
+format: html
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+consent <- read_csv(here::here("data/deidentified-student-data/original-files/Updated Statistics Education Study Consent Form (Responses) - Form Responses 1.csv")) 
+
+names(consent) <- c("time_stamp", "email", "name", "consent_given")
+
+consent <- consent |> 
+  filter(consent_given == "Yes") |> 
+  mutate(random_id = sample(65, 65, replace = FALSE))
+```
+
+
+Read all files
+
+```{r}
+hwfiles <- c("leca-hw1",
+             "leca-hw2",
+             "leca-hw3",
+             "leca-hw4",
+             "leca-hw6-ai", 
+             "leca-hw6-gf",
+             "leca-hw6-home-team",
+             "leca-hw7-ai",
+             "leca-hw7-ev",
+             "leca-hw7-sleep-dep",
+             "leca-hw8",
+             "leca-hw9",
+             "leca-pre-survey",
+             "leca-post-survey",
+             "lecb-pre-survey",
+             "lecb-post-survey",
+             "lecb-hw1",
+             "lecb-hw2",
+             "lecb-hw3",
+             "lecb-hw4",
+             "lecb-hw6",
+             "lecb-hw7",
+             "lecb-hw8-dogs",
+             "lecb-hw8-teen-preg",
+             "lecb-hw8-typing-speed",
+             "lecb-hw9-bikeshare",
+             "lecb-hw9-gorillas",
+             "lecb-hw9-movies")
+```
+
+
+
+
+```{r}
+for (i in 1:length(hwfiles)){
+  hw_data <- 
+    read_csv(paste0("deidentified-student-data/original-files/", hwfiles[i], ".csv")) |> 
+    janitor::clean_names() |> 
+    filter(email %in% consent$email) |> 
+    left_join(consent, by = "email") |> 
+    select(-c(first_name, 
+              last_name,
+              student_id,
+              email,
+              sections,
+              submission_id,
+              time_stamp,
+              name)) |> 
+    select(-contains("submitted_at")) |> 
+    mutate(across(everything(), ~ ifelse(
+    str_detect(., "\\[\\{\\\"?text_file_id\\\"?=>"),
+    str_remove(., "\\[\\{\\\"?text_file_id\\\"?=>.*"),
+    .
+  ))) 
+  
+# Removing question related to receiving help from a peer or AI. ## HW6 did not have this question
+  
+  
+if(stringr::str_detect(hwfiles[i], "leca-hw7")){
+  hw_data <- select(hw_data, -question_7_response)
+}  
+  
+if(stringr::str_detect(hwfiles[i], "lecb-hw7")){
+  hw_data <- select(hw_data, -question_6_response)
+}  
+  
+if(stringr::str_detect(hwfiles[i], "hw8")){
+  hw_data <- select(hw_data, -question_8_response)
+} 
+
+if(stringr::str_detect(hwfiles[i], "hw9")){
+  hw_data <- select(hw_data, -question_8_response)
+}
+  
+
+  
+write_csv(hw_data, paste0("deidentified-student-data/deidentified-files/", hwfiles[i], "-deidentified", ".csv"))
+  
+  
+}
+```
+

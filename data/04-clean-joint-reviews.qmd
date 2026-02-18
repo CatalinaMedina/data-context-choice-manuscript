@@ -1,0 +1,87 @@
+---
+title: "Create final cleaned combined reviews file"
+format: html
+---
+
+```{r}
+library(tidyverse)
+library(here)
+```
+
+
+## Data context reviews
+
+```{r}
+joint_review_lec_a <- read_csv(
+  here("data", "03-joint-reviews","combined-reviews-data-context-lec-a.csv"),
+  show_col_types = FALSE
+)
+
+joint_review_lec_b <- read_csv(
+  here("data", "03-joint-reviews","combined-reviews-data-context-lec-b.csv"),
+  show_col_types = FALSE
+)
+```
+
+```{r}
+context_reviews <- joint_review_lec_a |> 
+  bind_rows(joint_review_lec_b) |> 
+  select(-contains("cat")) |> 
+  select(-contains("mine")) |> 
+  select(-notes) |> 
+  mutate(overall = case_when(
+    !choice & str_detect(ds_context1_theme_resolved, "overall positive") ~ "positive",
+    !choice & str_detect(ds_context1_theme_resolved, "overall impartial") ~ "impartial",
+    !choice & str_detect(ds_context1_theme_resolved, "overall negative") ~ "negative",
+    !choice & str_detect(ds_context1_theme_resolved, "overall no info") ~ "not enough information",
+    choice ~ "unassessed",
+    TRUE ~ "Error"
+  ))
+  
+write_csv(
+  context_reviews, 
+  here("data", "04-cleaned-data", "data-context-reviews.csv")
+)
+```
+
+## Choice reviews
+
+```{r}
+joint_review_lec_a <- read_csv(
+  here("data", "03-joint-reviews","combined-choice-reviews-lec-a.csv"),
+  show_col_types = FALSE
+)
+
+joint_review_lec_b <- read_csv(
+  here("data", "03-joint-reviews","combined-choice-reviews-lec-b.csv"),
+  show_col_types = FALSE
+)
+```
+
+```{r}
+joint_review_lec_a |> 
+  rename(notes = "...13") |> 
+  bind_rows(joint_review_lec_b) |> 
+  select(-contains("cat")) |> 
+  select(-contains("mine")) |> 
+  mutate(overall = case_when(
+    str_detect(
+      negative_theme_resolved, 
+      pattern = "overall negative"
+    ) ~ "negative",
+    str_detect(
+      impartial_theme_resolved,
+      pattern = "overall impartial"
+    ) | str_detect(
+      impartial_theme_resolved,
+      pattern = "overall indifferent"
+    ) ~ "impartial",
+    str_detect(
+      positive_theme_resolved,
+      pattern = "overall positive"
+    ) ~ "positive",
+    TRUE ~ "missing"
+  )) |> 
+  arrange(overall, random_id) |> 
+  write_csv(here("data", "04-cleaned-data", "choice-reviews.csv"))
+```

@@ -1,0 +1,39 @@
+---
+title: "Instructor's estiamtion of relevancy"
+format: html
+author: Catalina Medina
+---
+
+The following are the rankings for homework option that I expect students to choose
+
+## Week 6: 
+
+1) Cheating with AI: These are computer science students that probably use AI for studying already, and cheating is sensitive topic, so I think those factors will lead to students choosing this topic the most.
+
+2) home team advantage: I think people interested in sports, that didn't choose cheating with AI would pick this topic, which I still expect to be a sizable chunk of students. A lot of students may be interested in sports, and from the title they wouldn't know which sport is being discussed.
+
+3) gluten free pasta: I expect this topic to appeal to students that are themselves gluten intolerant, or know people that are, meaning it is related to their daily life.
+
+## Week 7: 
+
+1) sleep deprivation: I think students would relate to this and be curious because it is something that pertains to their everyday life.
+
+2) cheating with AI: I thinks students that chose this topic the previous week would have a high chance of wanting to learn more about the topic. Also students that didn't see it might choose it because they saw it last week.
+
+3) eletric vehicles: I think this might be of interest to some of the students, but I think the other two options have stronger appeal this week.
+
+## Week 8:
+
+1) dog lifespan: Again my reasoning would be daily relevancy, but I think this would be relevant to a majority of students since students here typically tend to have grown up with pets or currently have pets.
+
+2) teen pregnancy: My opinion on this is similar to my reasoning for students choosing cheating with AI. I think this is more of a surprising topic to see brought up in this class, so that may lead people to choose it.
+
+3) typing speed: May appeal to students since their major is computer science, but I think the other two topics will have the stronger appeal.
+
+## Week 9:
+
+1) 2003movies: I think movies are relevant to students everyday life broadly, and they may know older movies, even if they wouldn't know all of them. These students were probably born around 2003, so I may be underestimating how relevant the appeal will be.
+
+2) bikeshare: I think biking and bike rentals for college students may be something relevant to daily life for transportation and fun. I do think movies would be more appealing than bike rental data though.
+
+3) gorilla: This would be the most removed from daily life relevancy, but I think it could appeal to students because it almost seems like a silly topic.

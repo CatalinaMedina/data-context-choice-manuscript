@@ -1,0 +1,25 @@
+file_name,hw,section,choice,context,data_context_questions,questions_to_drop,reason_to_drop_question,ds_context_id
+leca-hw6-ai-deidentified.csv,6,A,TRUE,Cheating with AI,question_4,question_4,Question 4 was data context question.,1
+leca-hw6-gf-deidentified.csv,6,A,TRUE,Gluten free pasta,question_3,question_3,Question 3 was data context question.,2
+leca-hw6-home-team-deidentified.csv,6,A,TRUE,Home-team advantage,question_4,question_4,Question 4 was data context question.,3
+lecb-hw6-deidentified.csv,6,B,FALSE,Cheating with AI,question_4,question_4,Question 4 was data context question.,1
+leca-hw7-ai-deidentified.csv,7,A,TRUE,Cheating with AI,question_6,"question_6, question_7",Question 6 was data context question. Question 7 was about homework help.,1
+leca-hw7-ev-deidentified.csv,7,A,TRUE,Electric vehicles,question_6,"question_6, question_7",Question 6 was data context question. Question 7 was about homework help.,2
+leca-hw7-sleep-dep-deidentified.csv,7,A,TRUE,Sleep deprivation,question_6,"question_6, question_7",Question 6 was data context question. Question 7 was about homework help.,3
+lecb-hw7-deidentified.csv,7,B,FALSE,Sleep deprivation,NA,question_6,Question 6 was about homework help.,3
+leca-hw8-deidentified.csv,8,A,FALSE,Typing speed,question_7,"question_7, question_8",Question 7 was data context. Question 8 was homework help.,1
+lecb-hw8-dogs-deidentified.csv,8,B,TRUE,Dog lifespans,question_7,"question_7, question_8",Question 7 was data context. Question 8 was homework help.,2
+lecb-hw8-teen-preg-deidentified.csv,8,B,TRUE,Teen pregnancies,question_7,"question_7, question_8",Question 7 was data context. Question 8 was homework help.,3
+lecb-hw8-typing-speed-deidentified.csv,8,B,TRUE,Typing speed,question_7,"question_7, question_8",Question 7 was data context. Question 8 was homework help.,1
+leca-hw9-deidentified.csv,9,A,FALSE,2003 movies,question_7,"question_6, question_7, question_8",question_6 was only MLE (not an intervention topic and no data was involved). Question 7 was data context question and Question 8 was homework help.,1
+lecb-hw9-bikeshare-deidentified.csv,9,B,TRUE,Bike shares,question_7,"question_6, question_7, question_8",question_6 was only MLE (not an intervention topic and no data was involved). Question 7 was data context question and Question 8 was homework help.,2
+lecb-hw9-gorillas-deidentified.csv,9,B,TRUE,Gorillas,question_7,"question_6, question_7, question_8",question_6 was only MLE (not an intervention topic and no data was involved). Question 7 was data context question and Question 8 was homework help.,3
+lecb-hw9-movies-deidentified.csv,9,B,TRUE,2003 movies,question_7,"question_6, question_7, question_8",question_6 was only MLE (not an intervention topic and no data was involved). Question 7 was data context question and Question 8 was homework help.,1
+leca-hw1-deidentified.csv,1,A,,,,question_2,Question 2 was homework help,
+leca-hw2-deidentified.csv,2,A,,,,question_6,Homework help question,
+leca-hw3-deidentified.csv,3,A,,,,question_8,Homework help question,
+leca-hw4-deidentified.csv,4,A,,,,question_5,Homework help question,
+lecb-hw1-deidentified.csv,1,B,,,,NA,Lecture B had no homework help question.,
+lecb-hw2-deidentified.csv,2,B,,,,question_6,Homework help question,
+lecb-hw3-deidentified.csv,3,B,,,,question_8,Homework help question,
+lecb-hw4-deidentified.csv,4,B,,,,question_5,Homework help question,

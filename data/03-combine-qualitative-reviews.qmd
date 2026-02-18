@@ -1,0 +1,322 @@
+---
+title: "Qualitative data analysis"
+format: pdf
+---
+
+```{r}
+#| message: false
+library(tidyverse)
+library(here)
+```
+
+## Data context themes
+### Data wrangling lecture A
+
+Read in data
+```{r}
+mines_reviews_og <- read_csv(
+  here(
+    "data", 
+    "02-independent-reviews",
+    "hw-context-reasons-themes-Mine-lec-a.csv"
+  ),
+  show_col_types = FALSE
+) 
+
+mines_reviews <- mines_reviews_og|> 
+  select(-contains("reason")) |> 
+  select(-contains("notes")) |> 
+  rename(ds_context1_theme_mine = ds_context1_theme) |> 
+  rename(ds_context2_theme_mine = ds_context2_theme) |> 
+  rename(ds_context3_theme_mine = ds_context3_theme) |> 
+  rename(nonspecific_theme_mine = nonspecific_theme)
+  
+
+cats_reviews_og <- read_csv(
+  here(
+    "data", 
+    "02-independent-reviews", 
+    "hw-context-reasons-themes-Catalina.csv"
+  ),
+  show_col_types = FALSE
+) 
+
+cats_reviews <- cats_reviews_og|> 
+  select(-contains("reason")) |> 
+  select(-contains("notes")) |> 
+  rename(ds_context1_theme_cat = ds_context1_theme) |> 
+  rename(ds_context2_theme_cat = ds_context2_theme) |> 
+  rename(ds_context3_theme_cat = ds_context3_theme) |> 
+  rename(nonspecific_theme_cat = nonspecific_theme)
+```
+
+Merge certain columns into one data frame
+```{r}
+lec_a_reviews <- mines_reviews |> 
+  full_join(cats_reviews) |> 
+  arrange(assignment_id) |>
+  mutate(ds_context1_theme_resolved = case_when(
+    ds_context1_theme_cat == ds_context1_theme_mine ~ ds_context1_theme_cat,
+    TRUE ~ NA
+  )) |> 
+  mutate(ds_context2_theme_resolved = case_when(
+    ds_context2_theme_cat == ds_context2_theme_mine ~ ds_context2_theme_cat,
+    TRUE ~ NA
+  )) |>
+  mutate(ds_context3_theme_resolved = case_when(
+    ds_context3_theme_cat == ds_context3_theme_mine ~ ds_context3_theme_cat,
+    TRUE ~ NA
+  )) |>
+  mutate(nonspecific_theme_resolved = case_when(
+    nonspecific_theme_cat == nonspecific_theme_mine ~ nonspecific_theme_cat,
+    nonspecific_theme_cat == "no info" & is.na(nonspecific_theme_mine) ~ "no info",
+    TRUE ~ NA
+  )) |>
+  filter(section == "A") |> 
+  select( 
+    "assignment_id",
+    "random_id",
+    "hw",
+    "section",
+    "choice",
+    "context",
+    "context_q1_response",
+    "context_q2_response",
+    "context_q3_response",
+    "ds_context1_theme_cat",
+    "ds_context1_theme_mine",
+    "ds_context1_theme_resolved",
+    "ds_context2_theme_cat",
+    "ds_context2_theme_mine",
+    "ds_context2_theme_resolved",
+    "ds_context3_theme_cat",
+    "ds_context3_theme_mine",
+    "ds_context3_theme_resolved",
+    "nonspecific_theme_cat",
+    "nonspecific_theme_mine",
+    "nonspecific_theme_resolved"
+  )
+
+write_csv(lec_a_reviews, here("data", "03-cleaned-data", "combined-reviews-lec-a.csv"))
+```
+
+### Data wrangling lecture B
+
+Read in data
+```{r}
+mines_reviews_og <- read_csv(
+  here(
+    "data", 
+    "02-independent-reviews", 
+    "hw-context-reasons-themes-Mine-lec-b.csv"
+  ),
+  show_col_types = FALSE
+) 
+
+mines_reviews <- mines_reviews_og|> 
+  select(-contains("reason")) |> 
+  select(-contains("notes")) |> 
+  rename(ds_context1_theme_mine = ds_context1_theme) |> 
+  rename(ds_context2_theme_mine = ds_context2_theme) |> 
+  rename(ds_context3_theme_mine = ds_context3_theme) |> 
+  rename(nonspecific_theme_mine = nonspecific_theme)
+  
+
+cats_reviews_og <- read_csv(
+  here(
+    "data", 
+    "02-independent-reviews",
+    "hw-context-reasons-themes-Catalina.csv"
+  ),
+  show_col_types = FALSE
+) 
+
+cats_reviews <- cats_reviews_og|> 
+  select(-contains("reason")) |> 
+  select(-contains("notes")) |> 
+  rename(ds_context1_theme_cat = ds_context1_theme) |> 
+  rename(ds_context2_theme_cat = ds_context2_theme) |> 
+  rename(ds_context3_theme_cat = ds_context3_theme) |> 
+  rename(nonspecific_theme_cat = nonspecific_theme)
+```
+
+Merge certain columns into one data frame
+```{r}
+lec_b_reviews <- mines_reviews |> 
+  full_join(cats_reviews) |> 
+  arrange(assignment_id) |>
+  mutate(ds_context1_theme_resolved = case_when(
+    ds_context1_theme_cat == ds_context1_theme_mine ~ ds_context1_theme_cat,
+    TRUE ~ NA
+  )) |> 
+  mutate(ds_context2_theme_resolved = case_when(
+    ds_context2_theme_cat == ds_context2_theme_mine ~ ds_context2_theme_cat,
+    TRUE ~ NA
+  )) |>
+  mutate(ds_context3_theme_resolved = case_when(
+    ds_context3_theme_cat == ds_context3_theme_mine ~ ds_context3_theme_cat,
+    TRUE ~ NA
+  )) |>
+  mutate(nonspecific_theme_resolved = case_when(
+    nonspecific_theme_cat == nonspecific_theme_mine ~ nonspecific_theme_cat,
+    nonspecific_theme_cat == "no info" & is.na(nonspecific_theme_mine) ~ "no info",
+    TRUE ~ NA
+  )) |>
+  filter(section == "B") |> 
+  select( 
+    "assignment_id",
+    "random_id",
+    "hw",
+    "section",
+    "choice",
+    "context",
+    "context_q1_response",
+    "context_q2_response",
+    "context_q3_response",
+    "ds_context1_theme_cat",
+    "ds_context1_theme_mine",
+    "ds_context1_theme_resolved",
+    "ds_context2_theme_cat",
+    "ds_context2_theme_mine",
+    "ds_context2_theme_resolved",
+    "ds_context3_theme_cat",
+    "ds_context3_theme_mine",
+    "ds_context3_theme_resolved",
+    "nonspecific_theme_cat",
+    "nonspecific_theme_mine",
+    "nonspecific_theme_resolved"
+  ) |> 
+  arrange(hw, context, random_id)
+
+write_csv(lec_b_reviews, here("data", "03-cleaned-data", "combined-reviews-lec-b.csv"))
+```
+## Choice themes 
+
+### Lecture A
+
+```{r}
+choice_reviews_cat_og <- read_csv(
+  here("data", "02-independent-reviews", "survey-choice-themes-Cat.csv"),
+  show_col_types = FALSE
+)
+
+choice_reviews_mine_og <- read_csv(
+  here("data", "02-independent-reviews", "survey-choice-themes-Mine.csv"),
+  show_col_types = FALSE
+)
+
+choice_reviews_mine <- choice_reviews_mine_og |> 
+  select(-contains("reason")) |>
+  select(-contains("nonspecific")) |> 
+  rename(negative_theme_mine = negative_theme) |> 
+  rename(impartial_theme_mine = impartial_theme) |> 
+  rename(positive_theme_mine = positive_theme)
+
+choice_reviews_cat <- choice_reviews_cat_og |> 
+  select(-contains("reason")) |>
+  select(-contains("nonspecific")) |> 
+  rename(negative_theme_cat = negative_theme) |> 
+  rename(impartial_theme_cat = impartial_theme) |> 
+  rename(positive_theme_cat = positive_theme)
+```
+
+```{r}
+choice_reviews_lec_a <- choice_reviews_mine |> 
+  full_join(choice_reviews_cat) |> 
+  arrange(random_id) |>
+  mutate(negative_theme_resolved = case_when(
+    negative_theme_cat == negative_theme_mine ~ negative_theme_cat,
+    TRUE ~ NA
+  )) |> 
+  mutate(impartial_theme_resolved = case_when(
+    impartial_theme_cat == impartial_theme_mine ~ impartial_theme_cat,
+    TRUE ~ NA
+  )) |>
+  mutate(positive_theme_resolved = case_when(
+    positive_theme_cat == positive_theme_mine ~ positive_theme_cat,
+    TRUE ~ NA
+  )) |>
+  filter(section == "A") |> 
+  select( 
+    "random_id",
+    "section",
+    "student_response",
+    "negative_theme_cat",
+    "negative_theme_mine",
+    "negative_theme_resolved",
+    "impartial_theme_cat",
+    "impartial_theme_mine",
+    "impartial_theme_resolved",
+    "positive_theme_cat",
+    "positive_theme_mine",
+    "positive_theme_resolved"
+  )
+
+write_csv(choice_reviews_lec_a, here("data", "03-joint-reviews", "combined-choice-reviews-lec-a.csv"))
+```
+
+
+
+### Lecture B
+
+```{r}
+choice_reviews_cat_og <- read_csv(
+  here("data", "02-independent-reviews", "survey-choice-themes-Cat.csv"),
+  show_col_types = FALSE
+)
+
+choice_reviews_mine_og <- read_csv(
+  here("data", "02-independent-reviews", "survey-choice-themes-Mine.csv"),
+  show_col_types = FALSE
+)
+
+choice_reviews_mine <- choice_reviews_mine_og |> 
+  select(-contains("reason")) |>
+  select(-contains("nonspecific")) |> 
+  rename(negative_theme_mine = negative_theme) |> 
+  rename(impartial_theme_mine = impartial_theme) |> 
+  rename(positive_theme_mine = positive_theme)
+
+choice_reviews_cat <- choice_reviews_cat_og |> 
+  select(-contains("reason")) |>
+  select(-contains("nonspecific")) |> 
+  rename(negative_theme_cat = negative_theme) |> 
+  rename(impartial_theme_cat = impartial_theme) |> 
+  rename(positive_theme_cat = positive_theme)
+```
+
+```{r}
+choice_reviews_lec_b <- choice_reviews_mine |> 
+  full_join(choice_reviews_cat) |> 
+  arrange(random_id) |>
+  mutate(negative_theme_resolved = case_when(
+    negative_theme_cat == negative_theme_mine ~ negative_theme_cat,
+    TRUE ~ NA
+  )) |> 
+  mutate(impartial_theme_resolved = case_when(
+    impartial_theme_cat == impartial_theme_mine ~ impartial_theme_cat,
+    TRUE ~ NA
+  )) |>
+  mutate(positive_theme_resolved = case_when(
+    positive_theme_cat == positive_theme_mine ~ positive_theme_cat,
+    TRUE ~ NA
+  )) |>
+  filter(section == "B") |> 
+  select( 
+    "random_id",
+    "section",
+    "student_response",
+    "negative_theme_cat",
+    "negative_theme_mine",
+    "negative_theme_resolved",
+    "impartial_theme_cat",
+    "impartial_theme_mine",
+    "impartial_theme_resolved",
+    "positive_theme_cat",
+    "positive_theme_mine",
+    "positive_theme_resolved"
+  )
+
+write_csv(choice_reviews_lec_b, here("data", "03-joint-reviews", "combined-choice-reviews-lec-b.csv"))
+```
+
