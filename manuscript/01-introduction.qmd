@@ -1,13 +1,14 @@
 ---
 editor: visual
+bibliography: references.bib
 ---
 
 ## Introduction {#sec-introduction}
 
 Among the statistics education community, there are recommendations to use real data when teaching statistics.
 As Guidelines for Assessment and Instruction in Statistics Education (GAISE) College Report [-@gaise2016] states in recommendation 3, instructors should "integrate real data with a context and a purpose".
-Using real data with context helps students perceive statistics as real and relevant (Neumann et al. 2013, Bibby 2003, Brearley et al. 2018, Cobb & Moore 1997, Cobb 1992) and engage with the discipline (Hall 2011).
-Numerous recommendations exist on how to teach with real data and where to find it (Hall 2011, Singer & Willett 1990).
+Using real data with context helps students perceive statistics as real and relevant [@neumann2013; @bibby2003; @brearley2018; @cobb1997; @cobb1992] and engage with the discipline [@hall2011].
+Numerous recommendations exist on how to teach with real data and where to find it [@hall2011; @singer1990].
 We believe statistics should be taught as an investigative tool to learn from data about the world.
 
 We present @tbl-data-types to clarify what we mean by real data with a context.

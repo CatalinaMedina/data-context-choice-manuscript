@@ -72,8 +72,7 @@ Additionally, students appreciate having autonomy, even for small tasks like cho
 It also provides students with more resources to practice the material beyond the required assignments.
 As discussed in the introduction, some instructors provide choice of data context through a final project.
 Alternatively, by providing some choices throughout the course we can hopefully engage more students before the end of the course.
-We are not arguing for students to always be given a choice though.
-Be conscious of when you want all students to interact with a certain data context, versus when you are ok with them having a choice.
+A consideration to be aware of is when you want all students to interact with a certain data context, versus when you are okay with them having a choice.
 
 \underline{Why not?} We recognize that it may not be feasible for all instructors or for all assignments.
 Beyond the initial burden of finding and incorporating multiple real data sets with contexts we think students will care about, there is also the struggle of grading different assignments.
