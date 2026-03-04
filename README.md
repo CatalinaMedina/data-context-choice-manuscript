@@ -3,7 +3,7 @@
 [Catalina Medina](https://catalinamedina.github.io/)
 [Mine Dogucu](https://www.minedogucu.com/)
 
-To cite this manuscript from Arxiv:
+Manuscript will be on Arxiv soon!
 
 
 ## Abstract
