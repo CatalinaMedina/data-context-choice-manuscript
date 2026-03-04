@@ -1,9 +1,12 @@
 # Engaging students with statistics through choice of real data context on homework
 
-[Catalina Medina](https://catalinamedina.github.io/)
+[Catalina Medina](https://catalinamedina.github.io/) and
 [Mine Dogucu](https://www.minedogucu.com/)
 
 Manuscript will be on Arxiv soon!
+
+- [Manuscript](manuscript/00-manuscript.pdf)
+- [Supplemental materials](manuscript/05-supplementary-materials.pdf)
 
 
 ## Abstract
