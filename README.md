@@ -3,11 +3,7 @@
 [Catalina Medina](https://catalinamedina.github.io/) and
 [Mine Dogucu](https://www.minedogucu.com/)
 
-Manuscript will be on Arxiv soon!
-
-- [Manuscript](manuscript/00-manuscript.pdf)
-- [Supplemental materials](manuscript/05-supplementary-materials.pdf)
-
+Manuscript is available online on [arXiv:2603.04541](https://arxiv.org/abs/2603.04541)
 
 ## Abstract
 
