@@ -253,11 +253,11 @@ all_context_reasons <- all_context_reasons %>%
 ```{r}
 all_context_reasons |> 
   arrange(section, hw, context) |> 
-  write_csv(here("data", "cleaned-data", "hw-context-reasons-themes-Catalina.csv"))
+  write_csv(here("data", "cleaned-data", "hw-context-reasons-themes-author-a.csv"))
 
 all_context_reasons |> 
   arrange(section, hw, context) |> 
-  write_csv(here("data", "cleaned-data", "hw-context-reasons-themes-Mine.csv"))
+  write_csv(here("data", "cleaned-data", "hw-context-reasons-themes-author-b.csv"))
 ```
 
 We want another csv for students without choice of their responses about what the liked and didn't like about data context
@@ -301,12 +301,12 @@ Save a file for each reviewer
 ```{r}
 write_csv(
   choice_opinions, 
-  here("data", "02-independent-reviews", "survey-choice-themes-Cat.csv")
+  here("data", "02-independent-reviews", "survey-choice-themes-author-a.csv")
 )
 
 write_csv(
   choice_opinions, 
-  here("data", "02-independent-reviews", "survey-choice-themes-Mine.csv")
+  here("data", "02-independent-reviews", "survey-choice-themes-author-b.csv")
 )
 ```
 

@@ -26,8 +26,8 @@ joint_review_lec_b <- read_csv(
 ```{r}
 context_reviews <- joint_review_lec_a |> 
   bind_rows(joint_review_lec_b) |> 
-  select(-contains("cat")) |> 
-  select(-contains("mine")) |> 
+  select(-contains("author_a")) |> 
+  select(-contains("author_b")) |> 
   select(-notes) |> 
   mutate(overall = case_when(
     !choice & str_detect(ds_context1_theme_resolved, "overall positive") ~ "positive",
@@ -62,8 +62,8 @@ joint_review_lec_b <- read_csv(
 joint_review_lec_a |> 
   rename(notes = "...13") |> 
   bind_rows(joint_review_lec_b) |> 
-  select(-contains("cat")) |> 
-  select(-contains("mine")) |> 
+  select(-contains("author_a")) |> 
+  select(-contains("author_b")) |> 
   mutate(overall = case_when(
     str_detect(
       negative_theme_resolved, 
