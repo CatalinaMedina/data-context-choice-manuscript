@@ -32,7 +32,7 @@ Dryad.
 
 ## Teen pregnancy
 
-I was inspired to do an updated version of the teen pregnancy data set in 
+I was inspired from the teen pregnancy data set in 
 Chance, B. L., & Rossman, A. J. (2006). 
 *Investigating statistical concepts, applications and methods*. 
 Harrisonburg: Duxbury. 
